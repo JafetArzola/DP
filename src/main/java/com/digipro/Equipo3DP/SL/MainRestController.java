@@ -48,7 +48,6 @@ public class MainRestController {
     public void updateAlumno(@RequestBody Alumno alumno){
         alumnoRepository.save(alumno);
     }
-
     
 
 }
