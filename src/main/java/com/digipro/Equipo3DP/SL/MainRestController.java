@@ -34,7 +34,7 @@ public class MainRestController {
         return alumnoRepository.findAll();
     }
     
-    //Servicio update
+    //Servicio para guardar alumnos con id '0'
     @PostMapping("/updateAlumno")
     public void updateAlumno(@RequestBody Alumno alumno){
         alumnoRepository.save(alumno);
