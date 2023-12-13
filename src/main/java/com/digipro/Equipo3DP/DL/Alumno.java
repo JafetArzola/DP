@@ -35,8 +35,26 @@ public class Alumno implements Serializable {
     public Alumno(){
         
     }
+
+    public Alumno(int idalumno, String nombre, String apellidopaterno, String apellidomaterno) {
+        this.idalumno = idalumno;
+        this.nombre = nombre;
+        this.apellidopaterno = apellidopaterno;
+        this.apellidomaterno = apellidomaterno;
+    }
     
     
+    
+    public Alumno(String nombre, String apellidopaterno, String apellidomaterno){
+        this.nombre = nombre;
+        this.apellidopaterno = apellidopaterno;
+        this.apellidomaterno = apellidomaterno;
+    }
+    
+    public Alumno(String nombre, String apellidopaterno){
+        this.nombre = nombre;
+        this.apellidopaterno = apellidopaterno;
+    }
     
     public int getIdalumno() {
         return idalumno;
