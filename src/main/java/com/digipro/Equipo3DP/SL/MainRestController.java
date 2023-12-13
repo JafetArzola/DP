@@ -9,6 +9,7 @@ import com.digipro.Equipo3DP.DL.AlumnoRepository;
 import com.digipro.Equipo3DP.DL.Materia;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,6 +49,14 @@ public class MainRestController {
     public void updateAlumno(@RequestBody Alumno alumno){
         alumnoRepository.save(alumno);
     }
+    
+    //Servicio para eliminar registro mediante id
+    @PostMapping("/deleteAlumno")
+    public void deleteAlumno(@RequestBody Alumno alumno){
+        alumnoRepository.deleteById(alumno.getIdalumno());
+    }
+    
+    
     
 
 }
