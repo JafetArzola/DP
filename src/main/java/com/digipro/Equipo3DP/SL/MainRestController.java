@@ -28,11 +28,13 @@ public class MainRestController {
         this.alumnoRepository = alumnoRepository;
     }
 
+    //Servicio Get All
     @GetMapping("/getAllAlumnos")
     public List<Alumno> getAllAlumnos() {
         return alumnoRepository.findAll();
     }
     
+    //Servicio update
     @PostMapping("/updateAlumno")
     public void updateAlumno(@RequestBody Alumno alumno){
         alumnoRepository.save(alumno);
