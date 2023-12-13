@@ -17,28 +17,21 @@ public interface AlumnoRepository extends JpaRepository<Alumno, Integer> {
             @Param("p_apellido_paterno") String apellidoPaterno,
             @Param("p_apellido_materno") String apellidoMaterno
     );
-    
-     @Procedure(name = "UpdateAlumnoSP")
+
+    @Procedure(name = "UpdateAlumnoSP")
     void updateAlumnoSP(
-        @Param("p_id_alumno") Long idAlumno,
-        @Param("p_nombre") String nombre,
-        @Param("p_apellido_paterno") String apellidoPaterno,
-        @Param("p_apellido_materno") String apellidoMaterno
+            @Param("p_id_alumno") Long idAlumno,
+            @Param("p_nombre") String nombre,
+            @Param("p_apellido_paterno") String apellidoPaterno,
+            @Param("p_apellido_materno") String apellidoMaterno
     );
-    
+
     @Procedure(name = "DeleteAlumnoSP")
     void deleteAlumnoSP(@Param("p_id_alumno") Long idAlumno);
-    
-    @Query(nativeQuery = true, value = "{call GetAllAlumnoSP(:p_cursor)}")
-    List<Alumno> getAllAlumnosSP(@Param("p_cursor") List<Object[]> p_cursor);
-    
-    @Query(nativeQuery = true, value = "{call GetByIdAlumnoSP(:p_id_alumno, :p_cursor)}")
-    List<Alumno> getByIdAlumnoSP(
-        @Param("p_id_alumno") Long idAlumno,
-        @Param("p_cursor") List<Object[]> p_cursor
-    );
 
-  
+    @Procedure("GetAllAlumnoSP")
+    List<Alumno> getAllAlumnosSP();
+
+    @Procedure(name = "GetByIdAlumnoSP")
+    List<Alumno> getByIdAlumnoSP(@Param("p_id_alumno") int idAlumno);
 }
-
-
