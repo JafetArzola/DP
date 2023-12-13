@@ -7,9 +7,8 @@ package com.digipro.Equipo3DP.SL;
 import com.digipro.Equipo3DP.DL.Alumno;
 import com.digipro.Equipo3DP.DL.AlumnoRepository;
 import com.digipro.Equipo3DP.DL.Materia;
-import jakarta.persistence.EntityManager;
+import com.digipro.Equipo3DP.DL.MateriaRepository;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,13 +24,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class MainRestController {
 
     private AlumnoRepository alumnoRepository;
-    private EntityManager entityManager;
     
     public MainRestController(AlumnoRepository alumnoRepository) {
         this.alumnoRepository = alumnoRepository;
     }
     
-
+//-----------------------------------------------------------------
+    
+    //Servicios para ALumno
+    
+    
     //Servicio Get All
     @GetMapping("/getAllAlumnos")
     public List<Alumno> getAllAlumnos() {
@@ -57,6 +59,13 @@ public class MainRestController {
     }
     
     
+//-----------------------------------------------------------------
     
+    //Servicios para Materia
+    
+//    @GetMapping("/getAllMaterias")
+//    public List<Materia> getAllMaterias(){
+//        return materiaRepository.findAll();
+//    }
 
 }
