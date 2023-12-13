@@ -31,9 +31,12 @@ public class Alumno implements Serializable {
     @Basic
     private String apellidomaterno;
 
+    
     public Alumno(){
         
     }
+    
+    
     
     public int getIdalumno() {
         return idalumno;
