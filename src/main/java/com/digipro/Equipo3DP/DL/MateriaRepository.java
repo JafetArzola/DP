@@ -10,8 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author digis
  */
-public interface AlumnoRepository extends JpaRepository<Alumno, Integer> {
-  
+public interface MateriaRepository extends JpaRepository<Materia, Integer>{
+    
 }
-
-
