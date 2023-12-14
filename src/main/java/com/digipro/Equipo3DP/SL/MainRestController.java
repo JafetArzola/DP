@@ -24,9 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class MainRestController {
 
     private AlumnoRepository alumnoRepository;
+    private MateriaRepository materiaRepository;
     
-    public MainRestController(AlumnoRepository alumnoRepository) {
+    public MainRestController(AlumnoRepository alumnoRepository, MateriaRepository materiaRepository) {
         this.alumnoRepository = alumnoRepository;
+        this.materiaRepository = materiaRepository;
     }
     
 //-----------------------------------------------------------------
@@ -63,9 +65,28 @@ public class MainRestController {
     
     //Servicios para Materia
     
-//    @GetMapping("/getAllMaterias")
-//    public List<Materia> getAllMaterias(){
-//        return materiaRepository.findAll();
-//    }
+    @GetMapping("/getAllMaterias")
+    public List<Materia> getAllMaterias(){
+        return materiaRepository.findAll();
+    }
+    
+    //Servicio para guardar alumnos con 'id' iguales a 0
+    @PostMapping("/addMateria")
+    public void addMateria(@RequestBody Materia materia){
+        materiaRepository.save(materia);
+    }
+    
+    //Servicio para guardar alumnos con 'id' distinto de 0
+    @PostMapping("/updateMateria")
+    public void updateMateria(@RequestBody Materia materia){
+        materiaRepository.save(materia);
+    }
+    
+    //Servicio para eliminar registro mediante id
+    @PostMapping("/deleteMateria")
+    public void deleteMateria(@RequestBody Materia materia){
+        materiaRepository.deleteById(materia.getIdmateria());
+    }
+    
 
 }
