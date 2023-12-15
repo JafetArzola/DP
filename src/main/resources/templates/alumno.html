@@ -1,0 +1,109 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layaout"
+      layout:decorate="~{layout}"> 
+
+    <body layout:fragment="body">
+        </br>
+        </br>
+        </br>
+        <div class="container">
+            <center>
+                <h1>Listado de materias</h1>
+            </center>
+            </br>
+            </br>
+            <div class="row">
+                <center>
+                    <a th:href="@{/DP/alumno/{idalumno}(idalumno=0)}" class="col-md-2 btn btn-info" data-bs-toggle="modal" data-bs-target="#myModal">Agregar alumno</a>
+                </center>
+            </div>
+            </br>
+            <form th:action="@{/DP/alumno}" method="post" th:object="${alumno}" enctype="multipart/form-data">
+                <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Registro de alumnos</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="col-12">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text bg-primary text-light" id="basic-addon1"><i class="bi bi-person-add"></i></span>
+                                        <input type="text" class="form-control" placeholder="Nombre" name="nombre">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text bg-primary text-light" id="basic-addon1"><i class="bi bi-person-add"></i></span>
+                                        <input type="text" class="form-control" placeholder="Apellido paterno" name="apellidopaterno">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text bg-primary text-light" id="basic-addon1"><i class="bi bi-person-add"></i></span>
+                                        <input type="text" class="form-control" placeholder="Apellido materno" name="apellidomaterno">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-primary">Registrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            </br>
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Eliminar</th>
+                        <th scope="col">IdAlumno</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Apellido paterno</th>
+                        <th scope="col">Apellido materno</th>
+                        <th scope="col">Actualizar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="alumno: ${alumnos}">
+                        <td>
+                            <a th:href="@{/DP/alumno/delete/{idalumno}(idalumno=${alumno.idalumno})}"  type="button" class="btn btn-danger bi bi-trash-fill"></a>
+                        </td>
+                        <td th:text="${alumno.idalumno}"></td>
+                        <td th:text="${alumno.nombre}"></td>
+                        <td th:text="${alumno.apellidopaterno}"></td>
+                        <td th:text="${alumno.apellidomaterno}"></td>
+                        <td>
+                            <a th:href="@{/DP/alumno/{idalumno}(idalumno=${alumno.idalumno})}" type="button" class="btn btn-warning btn-editar" data-bs-toggle="modal" data-bs-target="#myModal">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Obtener todos los botones de editar
+        var btnEditar = document.querySelectorAll('.btn-editar');
+
+        // Agregar un evento de clic a cada botón
+        btnEditar.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                // Obtener los datos del alumno actual
+                var nombre = btn.getAttribute('data-nombre');
+                var apellidoPaterno = btn.getAttribute('data-apellidopaterno');
+                var apellidoMaterno = btn.getAttribute('data-apellidomaterno');
+
+                // Insertar los datos en el modal
+                document.querySelector('#myModal input[name="nombre"]').value = nombre;
+                document.querySelector('#myModal input[name="apellidopaterno"]').value = apellidoPaterno;
+                document.querySelector('#myModal input[name="apellidomaterno"]').value = apellidoMaterno;
+            });
+        });
+    });
+</script>
