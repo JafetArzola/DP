@@ -7,6 +7,7 @@ package com.digipro.Equipo3DP.PL;
 import com.digipro.Equipo3DP.DL.Alumno;
 import com.digipro.Equipo3DP.DL.AlumnoRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -65,7 +66,7 @@ public class MainController {
             model.addAttribute("alumno", new Alumno());
             return "alumno";
         } else {
-            Alumno alumno = alumnoRepository.findById(idalumno);
+            Optional<Alumno> alumno = alumnoRepository.findById(idalumno);
             if (alumno != null) {
                 model.addAttribute("alumno", alumno);
             } else {
