@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 
@@ -36,14 +37,13 @@ public class MainController {
     public MainController(AlumnoRepository alumnoRepository) {
         this.alumnoRepository = alumnoRepository;
     }
-
-    @RequestMapping("/home")
+    @GetMapping("/home")
     public String Home() {
         return "Bienvenida";
     }
 
     @RequestMapping("/alumno")
-    public String home(Model model) {
+    public String alumno(Model model) {
         RestTemplate restTemplate = new RestTemplate();
 
         String apiURL = "http://localhost:8080/DPAPI/getAllAlumnos";
@@ -135,4 +135,8 @@ public class MainController {
         return "alumnomateria";
     }
 
+    @GetMapping("/Materia")
+    public String Materia() {
+        return "Materia";
+    }
 }
