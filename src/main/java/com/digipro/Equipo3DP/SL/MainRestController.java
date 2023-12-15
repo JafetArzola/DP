@@ -5,6 +5,8 @@
 package com.digipro.Equipo3DP.SL;
 
 import com.digipro.Equipo3DP.DL.Alumno;
+import com.digipro.Equipo3DP.DL.alumnomateria;
+import com.digipro.Equipo3DP.DL.AlumnoMateriaRepository;
 import com.digipro.Equipo3DP.DL.AlumnoRepository;
 import com.digipro.Equipo3DP.DL.Materia;
 import com.digipro.Equipo3DP.DL.MateriaRepository;
@@ -25,10 +27,14 @@ public class MainRestController {
 
     private AlumnoRepository alumnoRepository;
     private MateriaRepository materiaRepository;
+    private AlumnoMateriaRepository alumnoMateriaRepository;
     
-    public MainRestController(AlumnoRepository alumnoRepository, MateriaRepository materiaRepository) {
+    public MainRestController(AlumnoRepository alumnoRepository, 
+                              MateriaRepository materiaRepository,
+                              AlumnoMateriaRepository alumnoMateriaRepository) {
         this.alumnoRepository = alumnoRepository;
         this.materiaRepository = materiaRepository;
+        this.alumnoMateriaRepository = alumnoMateriaRepository;
     }
     
 //-----------------------------------------------------------------
@@ -89,4 +95,39 @@ public class MainRestController {
     }
     
 
+    
+//-----------------------------------------------------------------
+    
+    //Servicios para alumnomateria
+    
+    //Servicio para obtener a un alumno junto con todas sus materias
+    @GetMapping("/getAlumnoMateria")
+    public List<alumnomateria> getAlumnoMateria(@RequestBody alumnomateria alumnomateria){
+        return alumnoMateriaRepository.getMateriaByIdAlumno(alumnomateria.getIdalumno().getIdalumno());
+    }
+    
+    
+    //Servicio para añadir una materia a un alumno; donde idAlumnoMateria sea igual a '0'
+    @PostMapping("/addAlumnoMateria")
+    public void addAlumnoMateria(@RequestBody alumnomateria alumnomateria){
+        alumnoMateriaRepository.save(alumnomateria);
+    }
+    
+    
+    //Servicio para editar una materia registrada por un alumno; donde idAlumnoMateria sea diferente de '0'
+    @PostMapping("/updateAlumnoMateria")
+    public void updateAlumnoMateria(@RequestBody alumnomateria alumnomateria){
+        alumnoMateriaRepository.save(alumnomateria);
+    }
+    
+    //Servicio para eliminar una materia registrada por el alumno
+    @PostMapping("/deleteAlumnoMateria")
+    public void deleteAlumnoMateria(@RequestBody alumnomateria alumnomateria){
+        alumnoMateriaRepository.delete(alumnomateria);
+    }
+    
+    
+    
+    
+    
 }
