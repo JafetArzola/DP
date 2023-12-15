@@ -9,6 +9,7 @@ import com.digipro.Equipo3DP.DL.AlumnoRepository;
 import com.digipro.Equipo3DP.DL.Materia;
 import com.digipro.Equipo3DP.DL.MateriaRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -96,5 +97,21 @@ public class MainRestController {
     public void deleteMateria(@PathVariable int idmateria) {
         materiaRepository.deleteById(idmateria);
     }
-
+    
+    @GetMapping("/getMateria/{id}")
+    public ResponseEntity<?> getMateria(@PathVariable int id) {
+        try {
+            Optional<Materia> optionalMateria = materiaRepository.findById(id);
+            
+            if (optionalMateria.isPresent()) {
+                Materia materia = optionalMateria.get();
+                return ResponseEntity.ok(materia);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró la materia con ID: " + id);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener la materia: " + e.getMessage());
+        }
+    }
 }

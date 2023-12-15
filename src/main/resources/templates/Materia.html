@@ -153,19 +153,21 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
+
                                     <h5 class="modal-title" id="exampleModalLabel">Detalles de la Materia</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
                                         <label for="nombre" class="form-label">Nombre:</label>
-                                        <input type="text" class="form-control" id="nombre">
+                                        <input type="text" class="form-control" id="nombre" required autocomplete="off">
                                     </div>
                                     <div class="mb-3">
                                         <label for="costo" class="form-label">Costo:</label>
-                                        <input type="text" class="form-control" id="costo">
+                                        <input type="text" class="form-control" id="costo" required autocomplete="off">
                                     </div>
                                 </div>
+
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cerrar</button>
                                     <button type="button" class="btn btn-outline-success" id="GuardarInformacion">Guardar cambios</button>
@@ -188,7 +190,6 @@
             </div>
         </footer>
     </body>
-
 </html>
 
 <!-- jQuery LoadingOverlay -->
@@ -196,7 +197,7 @@
 
 <script>
     $(document).ready(function () {
-        
+
         $.ajax({
             url: 'http://localhost:8080/DPAPI/getAllMaterias',
             type: 'GET',
@@ -239,7 +240,7 @@
                         // Ocultar LoadingOverlay después de 3 segundos
                         $("#exampleModal .modal-content").LoadingOverlay("hide", true);
                         $('#exampleModal').modal('hide');
-                    }, 3000);
+                    }, 500);
                 },
                 error: function (error) {
                     console.error('Error al agregar materia:', error);
@@ -249,75 +250,175 @@
                 }
             });
         });
-    
 
-    function buildTable(data) {
-        var tableBody = $('#materiasTableBody');
-        tableBody.empty();
-        data.forEach(function (materia) {
-            var row = $('<tr>');
-            row.append('<td>' + materia.nombre + '</td>');
-            row.append('<td>' + materia.costo + '</td>');
-            row.append('<td><button class="btn btn-outline-warning btnActualizar" data-id="' + materia.idmateria + '"><i class="bi bi-pencil-square"></i></button></td>');
-            row.append('<td><button class="btn btn-outline-danger btnEliminar" data-id="' + materia.idmateria + '"><i class="bi bi-trash3-fill"></i></button></td>');
-            tableBody.append(row);
-        });
 
-        $('.btnEliminar').on('click', function () {
-            var idMateria = $(this).data('id');
-
-            // Utiliza SweetAlert para mostrar una confirmación
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: 'Esta acción no se puede deshacer.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Si el usuario confirma, realiza la eliminación
-                    eliminarMateria(idMateria);
-                }
+        function buildTable(data) {
+            var tableBody = $('#materiasTableBody');
+            tableBody.empty();
+            data.forEach(function (materia) {
+                var row = $('<tr>');
+                row.append('<td>' + materia.nombre + '</td>');
+                row.append('<td>' + materia.costo + '</td>');
+                row.append('<td><button class="btn btn-outline-warning btnActualizar" data-id="' + materia.idmateria + '"><i class="bi bi-pencil-square"></i></button></td>');
+                row.append('<td><button class="btn btn-outline-danger btnEliminar" data-id="' + materia.idmateria + '"><i class="bi bi-trash3-fill"></i></button></td>');
+                tableBody.append(row);
             });
+
+            $('.btnActualizar').on('click', function () {
+                var idMateria = $(this).data('id');
+                $.ajax({
+                    url: 'http://localhost:8080/DPAPI/getMateria/' + idMateria,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (materia) {
+                        $('#nombre').val(materia.nombre);
+                        $('#costo').val(materia.costo);
+
+                        // Asegúrate de establecer el ID en el botón GuardarInformacion
+                        $('#GuardarInformacion').data('materia-id', idMateria);
+
+                        $('#exampleModal').modal('show');
+                    },
+                    error: function (error) {
+                        console.error('Error al obtener información de la materia:', error);
+                    }
+                });
+            });
+
+
+            $('.btnEliminar').on('click', function () {
+                var idMateria = $(this).data('id');
+
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: 'Esta acción no se puede deshacer.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        eliminarMateria(idMateria);
+                    }
+                });
+            });
+
+            function eliminarMateria(idMateria) {
+                // Realiza la solicitud Ajax para eliminar la materia
+                $.ajax({
+                    url: 'http://localhost:8080/DPAPI/deleteMateria/' + idMateria,
+                    type: 'DELETE',
+                    success: function (response) {
+                        console.log('Materia eliminada exitosamente:', response);
+
+                        // Recargar la tabla después de la eliminación (si es necesario)
+                        // Puedes volver a cargar todos los datos o solo el que se eliminó
+                        // Puedes usar la misma lógica que usaste para obtener datos iniciales
+
+                        // Ejemplo de recarga completa de datos
+                        $.ajax({
+                            url: 'http://localhost:8080/DPAPI/getAllMaterias',
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (data) {
+                                buildTable(data);
+                                $('#myTable').DataTable();
+                            },
+                            error: function (error) {
+                                console.error('Error al obtener los datos:', error);
+                            }
+                        });
+                    },
+                    error: function (error) {
+                        console.error('Error al eliminar materia:', error);
+                    }
+                });
+            }
+        }
+
+
+
+    });
+
+$(document).ready(function () {
+        // Variable global para almacenar el ID de la materia seleccionada
+        var materiaIdToUpdate;
+
+        $.ajax({
+            url: 'http://localhost:8080/DPAPI/getAllMaterias',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                buildTable(data);
+                $('#myTable').DataTable();
+            },
+            error: function (error) {
+                console.error('Error al obtener los datos:', error);
+            }
         });
+$('#exampleModal').on('hidden.bs.modal', function () {
+            materiaIdToUpdate = null;
+        });
+        // Evento click del botón "GuardarInformacion"
+        $('#GuardarInformacion').on('click', function () {
+            // Obtener valores de los campos del modal
+            var nombre = $('#nombre').val();
+            var costo = $('#costo').val();
 
-        function eliminarMateria(idMateria) {
-            // Realiza la solicitud Ajax para eliminar la materia
+            // Obtener el ID de la materia de la variable global
+            var idMateria = materiaIdToUpdate;
+
+            // Crear objeto de datos
+            var data = {
+                nombre: nombre,
+                costo: costo
+            };
+
+            // Mostrar LoadingOverlay solo en la sección del modal
+            $("#exampleModal .modal-content").LoadingOverlay("show", {
+                background: "#E0E0E0"
+            });
+
             $.ajax({
-                url: 'http://localhost:8080/DPAPI/deleteMateria/' + idMateria,
-                type: 'DELETE',
+                url: 'http://localhost:8080/DPAPI/updateMateria/' + idMateria,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
                 success: function (response) {
-                    console.log('Materia eliminada exitosamente:', response);
-
-                    // Recargar la tabla después de la eliminación (si es necesario)
-                    // Puedes volver a cargar todos los datos o solo el que se eliminó
-                    // Puedes usar la misma lógica que usaste para obtener datos iniciales
-
-                    // Ejemplo de recarga completa de datos
-                    $.ajax({
-                        url: 'http://localhost:8080/DPAPI/getAllMaterias',
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function (data) {
-                            buildTable(data);
-                            $('#myTable').DataTable();
-                        },
-                        error: function (error) {
-                            console.error('Error al obtener los datos:', error);
-                        }
-                    });
+                    console.log('Materia actualizada exitosamente:', response);
+                    setTimeout(function () {
+                        materiaIdToUpdate = null;
+                        $("#exampleModal .modal-content").LoadingOverlay("hide", true);
+                        $('#exampleModal').modal('hide');
+                    }, 500);
                 },
                 error: function (error) {
-                    console.error('Error al eliminar materia:', error);
+                    console.error('Error al actualizar la materia:', error);
+
+                    materiaIdToUpdate = null;
+
+                    $("#exampleModal .modal-content").LoadingOverlay("hide", true);
                 }
             });
-        }
-    }
-    
-    
-    
+        });
+
+        $('.btnActualizar').on('click', function () {
+            materiaIdToUpdate = $(this).data('id');
+            $.ajax({
+                url: 'http://localhost:8080/DPAPI/getMateria/' + materiaIdToUpdate,
+                type: 'GET',
+                dataType: 'json',
+                success: function (materia) {
+                    $('#nombre').val(materia.nombre);
+                    $('#costo').val(materia.costo);
+                    $('#exampleModal').modal('show');
+                },
+                error: function (error) {
+                    console.error('Error al obtener información de la materia:', error);
+                }
+            });
+        });
     });
 </script>
 <style>
