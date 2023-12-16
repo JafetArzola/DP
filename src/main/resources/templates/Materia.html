@@ -31,6 +31,10 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
 
+        <!-- Incluye SweetAlert CSS y JS en tu HTML -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     </head>
 
@@ -57,7 +61,7 @@
                 </div>
                 <!-- Nav Item - Dashboard -->
                 <li class="nav-item active">
-                    <a class="nav-link" href="index.html">
+                    <a class="nav-link"  href="/DP/home" >
                         <i class="bi bi-house-check"></i>
                         <span>Pagina principal</span></a>
                 </li>
@@ -69,7 +73,7 @@
                 </div>
                 <!-- Nav Item - Dashboard -->
                 <li class="nav-item active">
-                    <a class="nav-link" href="index.html">
+                    <a class="nav-link" href="/DP/alumno">
                         <i class="bi bi-person-add"></i>
                         <span>Alumnos</span></a>
                 </li>
@@ -82,7 +86,7 @@
                     Asignaturas
                 </div>
                 <li class="nav-item active">
-                    <a class="nav-link" href="index.html">
+                    <a class="nav-link" href="/DP/Materia">
                         <i class="bi bi-bookmark-check"></i>
                         <span>Materias</span></a>
                 </li>
@@ -94,7 +98,7 @@
                     Asignación
                 </div>
                 <li class="nav-item active">
-                    <a class="nav-link" href="index.html">
+                    <a class="nav-link" href="/DP/AlumnoMateria">
                         <i class="bi bi-journal-text"></i>
                         <span>Alumno Materia</span></a>
                 </li>
@@ -122,59 +126,61 @@
                             </div>
                         </form>
                     </nav>
- <div class="container mb-4">
-                <div class="d-grid gap-2">
-                    <a data-bs-toggle="modal" data-bs-target="#exampleModal" id="AgregarMateriaModal" class="btn btn-outline-success" type="button">
-                        <i class="bi bi-journals"></i>    Registrar Materia
-                    </a>
-                </div>
-            </div>
-            <div class="container">
-                <table id="myTable" class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Costo</th>
-                            <th>Editar</th>
-                            <th>Eliminar</th>
-                        </tr>
-                    </thead>
-                    <tbody id="materiasTableBody">
-
-                    </tbody>
-                </table>
-            </div>
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Detalles de la Materia</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="nombre" class="form-label">Nombre:</label>
-                                <input type="text" class="form-control" id="nombre">
-                            </div>
-                            <div class="mb-3">
-                                <label for="costo" class="form-label">Costo:</label>
-                                <input type="text" class="form-control" id="costo">
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="button" class="btn btn-outline-success" id="GuardarInformacion">Guardar cambios</button>
+                    <div class="container mb-4">
+                        <div class="d-grid gap-2">
+                            <a data-bs-toggle="modal" data-bs-target="#exampleModal" id="AgregarMateriaModal" class="btn btn-outline-success" type="button">
+                                <i class="bi bi-journals"></i>    Registrar Materia
+                            </a>
                         </div>
                     </div>
-                </div>
-            </div>
+                    <div class="container">
+                        <table id="myTable" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Costo</th>
+                                    <th>Editar</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="materiasTableBody">
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+
+                                    <h5 class="modal-title" id="exampleModalLabel">Detalles de la Materia</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="nombre" class="form-label">Nombre:</label>
+                                        <input type="text" class="form-control" id="nombre" required autocomplete="off">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="costo" class="form-label">Costo:</label>
+                                        <input type="text" class="form-control" id="costo" required autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-outline-success" id="GuardarInformacion">Guardar cambios</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
         </div>
         <div class="container mb-4">
-           
+
         </div>
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
@@ -184,15 +190,15 @@
             </div>
         </footer>
     </body>
-
 </html>
 
 <!-- jQuery LoadingOverlay -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-loading-overlay/2.1.7/loadingoverlay.min.js"></script>
 
 <script>
+    
     $(document).ready(function () {
-        // Obtener datos iniciales
+
         $.ajax({
             url: 'http://localhost:8080/DPAPI/getAllMaterias',
             type: 'GET',
@@ -231,11 +237,11 @@
                 data: JSON.stringify(data),
                 success: function (response) {
                     console.log('Materia agregada exitosamente:', response);
-                    // Puedes realizar acciones adicionales después de agregar la materia, si es necesario
-
-                    // Ocultar LoadingOverlay y cerrar el modal después de completar la operación
-                    $("#exampleModal .modal-content").LoadingOverlay("hide", true);
-                    $('#exampleModal').modal('hide');
+                    setTimeout(function () {
+                        // Ocultar LoadingOverlay después de 3 segundos
+                        $("#exampleModal .modal-content").LoadingOverlay("hide", true);
+                        $('#exampleModal').modal('hide');
+                    }, 500);
                 },
                 error: function (error) {
                     console.error('Error al agregar materia:', error);
@@ -245,29 +251,176 @@
                 }
             });
         });
+
+
+        function buildTable(data) {
+            var tableBody = $('#materiasTableBody');
+            tableBody.empty();
+            data.forEach(function (materia) {
+                var row = $('<tr>');
+                row.append('<td>' + materia.nombre + '</td>');
+                row.append('<td>' + materia.costo + '</td>');
+                row.append('<td><button class="btn btn-outline-warning btnActualizar" data-id="' + materia.idmateria + '"><i class="bi bi-pencil-square"></i></button></td>');
+                row.append('<td><button class="btn btn-outline-danger btnEliminar" data-id="' + materia.idmateria + '"><i class="bi bi-trash3-fill"></i></button></td>');
+                tableBody.append(row);
+            });
+
+            $('.btnActualizar').on('click', function () {
+                var idMateria = $(this).data('id');
+                $.ajax({
+                    url: 'http://localhost:8080/DPAPI/getMateria/' + idMateria,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (materia) {
+                        $('#nombre').val(materia.nombre);
+                        $('#costo').val(materia.costo);
+
+                        // Asegúrate de establecer el ID en el botón GuardarInformacion
+                        $('#GuardarInformacion').data('materia-id', idMateria);
+
+                        $('#exampleModal').modal('show');
+                    },
+                    error: function (error) {
+                        console.error('Error al obtener información de la materia:', error);
+                    }
+                });
+            });
+
+
+            $('.btnEliminar').on('click', function () {
+                var idMateria = $(this).data('id');
+
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: 'Esta acción no se puede deshacer.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        eliminarMateria(idMateria);
+                    }
+                });
+            });
+
+            function eliminarMateria(idMateria) {
+                // Realiza la solicitud Ajax para eliminar la materia
+                $.ajax({
+                    url: 'http://localhost:8080/DPAPI/deleteMateria/' + idMateria,
+                    type: 'DELETE',
+                    success: function (response) {
+                        console.log('Materia eliminada exitosamente:', response);
+
+                        // Recargar la tabla después de la eliminación (si es necesario)
+                        // Puedes volver a cargar todos los datos o solo el que se eliminó
+                        // Puedes usar la misma lógica que usaste para obtener datos iniciales
+
+                        // Ejemplo de recarga completa de datos
+                        $.ajax({
+                            url: 'http://localhost:8080/DPAPI/getAllMaterias',
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (data) {
+                                buildTable(data);
+                                $('#myTable').DataTable();
+                            },
+                            error: function (error) {
+                                console.error('Error al obtener los datos:', error);
+                            }
+                        });
+                    },
+                    error: function (error) {
+                        console.error('Error al eliminar materia:', error);
+                    }
+                });
+            }
+        }
+
+
+
     });
 
-    // Funciones auxiliares
-    function buildTable(data) {
-        var tableBody = $('#materiasTableBody');
-        tableBody.empty();
-        data.forEach(function (materia) {
-            var row = $('<tr>');
-            row.append('<td>' + materia.nombre + '</td>');
-            row.append('<td>' + materia.costo + '</td>');
-            row.append('<td><button class="btn btn-outline-success" onclick="editar(' + materia.idMateria + ')"><i class="bi bi-pencil-fill"></i></button></td>');
-            row.append('<td><button class="btn btn-outline-danger" onclick="eliminar(' + materia.idMateria + ')"><i class="bi bi-trash3-fill"></i></button></td>');
-            tableBody.append(row);
+$(document).ready(function () {
+        // Variable global para almacenar el ID de la materia seleccionada
+        var materiaIdToUpdate;
+
+        $.ajax({
+            url: 'http://localhost:8080/DPAPI/getAllMaterias',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                buildTable(data);
+                $('#myTable').DataTable();
+            },
+            error: function (error) {
+                console.error('Error al obtener los datos:', error);
+            }
         });
-    }
+$('#exampleModal').on('hidden.bs.modal', function () {
+            materiaIdToUpdate = null;
+        });
+        // Evento click del botón "GuardarInformacion"
+        $('#GuardarInformacion').on('click', function () {
+            // Obtener valores de los campos del modal
+            var nombre = $('#nombre').val();
+            var costo = $('#costo').val();
 
-    function editar(idMateria) {
-        console.log('Editar materia con ID: ' + idMateria);
-    }
+            // Obtener el ID de la materia de la variable global
+            var idMateria = materiaIdToUpdate;
 
-    function eliminar(idMateria) {
-        console.log('Eliminar materia con ID: ' + idMateria);
-    }
+            // Crear objeto de datos
+            var data = {
+                nombre: nombre,
+                costo: costo
+            };
+
+            // Mostrar LoadingOverlay solo en la sección del modal
+            $("#exampleModal .modal-content").LoadingOverlay("show", {
+                background: "#E0E0E0"
+            });
+
+            $.ajax({
+                url: 'http://localhost:8080/DPAPI/updateMateria/' + idMateria,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (response) {
+                    console.log('Materia actualizada exitosamente:', response);
+                    setTimeout(function () {
+                        materiaIdToUpdate = null;
+                        $("#exampleModal .modal-content").LoadingOverlay("hide", true);
+                        $('#exampleModal').modal('hide');
+                    }, 500);
+                },
+                error: function (error) {
+                    console.error('Error al actualizar la materia:', error);
+
+                    materiaIdToUpdate = null;
+
+                    $("#exampleModal .modal-content").LoadingOverlay("hide", true);
+                }
+            });
+        });
+
+        $('.btnActualizar').on('click', function () {
+            materiaIdToUpdate = $(this).data('id');
+            $.ajax({
+                url: 'http://localhost:8080/DPAPI/getMateria/' + materiaIdToUpdate,
+                type: 'GET',
+                dataType: 'json',
+                success: function (materia) {
+                    $('#nombre').val(materia.nombre);
+                    $('#costo').val(materia.costo);
+                    $('#exampleModal').modal('show');
+                },
+                error: function (error) {
+                    console.error('Error al obtener información de la materia:', error);
+                }
+            });
+        });
+    });
 </script>
 <style>
 
