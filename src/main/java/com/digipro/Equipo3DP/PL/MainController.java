@@ -139,4 +139,9 @@ public class MainController {
     public String Materia() {
         return "Materia";
     }
+    
+    @GetMapping("/AlumnoMateria")
+    public String AlumnoMateria() {
+        return "AlumnoMateria";
+    }
 }
