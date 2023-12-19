@@ -112,38 +112,38 @@
                 <div id="content">
 
                     <!-- Topbar -->
-                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-                        <form
-                            class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                            <div class="input-group">
-                                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                       aria-label="Search" aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" type="button">
-                                        <i class="bi bi-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top">
+
                     </nav>
                     <div class="container mb-4">
                         <div class="d-grid gap-2">
-                            <a data-bs-toggle="modal" data-bs-target="#exampleModal" id="AgregarMateriaModal" class="btn btn-outline-success" type="button">
-                                <i class="bi bi-journals"></i>    Registrar Materia
+                            <a data-bs-toggle="modal" data-bs-target="#exampleModal" id="AgregaralumnomateriaModal" class="btn btn-outline-success" type="button">
+                                <i class="bi bi-journals"></i>  Agregar alumnos-materias
                             </a>
                         </div>
                     </div>
                     <div class="container">
-                        <table id="myTable" class="table table-striped">
+                        <table id="firstTable" class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
+                                    <th>Apellido paterno</th>
+                                    <th>Apellido materno</th>
+                                    <th>Materia</th>
                                     <th>Costo</th>
-                                    <th>Editar</th>
-                                    <th>Eliminar</th>
                                 </tr>
                             </thead>
-                            <tbody id="materiasTableBody">
+                            <tbody id="alumnomateriaTableBody">
+
+                            </tbody>
+                        </table>
+                        <table id="thirdTable" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>suma total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sumatotalTableBody">
 
                             </tbody>
                         </table>
@@ -154,20 +154,17 @@
                             <div class="modal-content">
                                 <div class="modal-header">
 
-                                    <h5 class="modal-title" id="exampleModalLabel">Detalles de la Materia</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Detalles</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="nombre" class="form-label">Nombre:</label>
-                                        <input type="text" class="form-control" id="nombre" required autocomplete="off">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="costo" class="form-label">Costo:</label>
-                                        <input type="text" class="form-control" id="costo" required autocomplete="off">
+                                        <label for="materia" class="form-label">Materia:</label>
+                                        <select class="form-select" id="materia" required>
+                                            <option value="materia1">Materia 1</option>
+                                        </select>
                                     </div>
                                 </div>
-
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cerrar</button>
                                     <button type="button" class="btn btn-outline-success" id="GuardarInformacion">Guardar cambios</button>
@@ -191,15 +188,14 @@
         </footer>
     </body>
 </html>
-
-<!-- jQuery LoadingOverlay -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-loading-overlay/2.1.7/loadingoverlay.min.js"></script>
-
 <script>
 
     $(document).ready(function () {
 
-        getAllMaterias();
+        var urlParams = new URLSearchParams(window.location.search);
+        var idAlumno = urlParams.get('idalumno');
+
+        getAlumnoMateria(idAlumno);
 
         $('#GuardarInformacion').on('click', function () {
 
@@ -208,196 +204,101 @@
             });
         });
     });
+    function getAlumnoMateria(idAlumno) {
 
-    function getAllMaterias() {
         $.ajax({
-            url: 'http://localhost:8080/DPAPI/getAllMaterias',
-            type: 'GET',
+            url: 'http://localhost:8080/DPAPI/getAlumnoMateria',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({"idalumno": idAlumno}),
             dataType: 'json',
             success: function (data) {
                 buildTable(data);
-                $('#myTable').DataTable();
+                $('#firstTable').DataTable();
             },
             error: function (error) {
                 console.error('Error al obtener los datos:', error);
             }
         });
-    }
+        function buildTable(data) {
+            var tableBody = $('#alumnomateriaTableBody');
+            tableBody.empty();
+            data.forEach(function (alumnomateria) {
+                var row = $('<tr>');
+                row.append('<td>' + alumnomateria.idalumno.nombre + '</td>');
+                row.append('<td>' + alumnomateria.idalumno.apellidopaterno + '</td>');
+                row.append('<td>' + alumnomateria.idalumno.apellidomaterno + '</td>');
+                row.append('<td>' + alumnomateria.idmateria.nombre + '</td>');
+                row.append('<td>' + alumnomateria.idmateria.costo + '</td>');
+//                row.append('<td><button class="btn btn-outline-warning btnActualizar" data-id="' + alumnomateria.idalumnomateria + '"><i class="bi bi-pencil-square"></i></button></td>');
+//                row.append('<td><button class="btn btn-outline-danger btnEliminar" data-id="' + alumnomateria.idalumnomateria + '"><i class="bi bi-trash3-fill"></i></button></td>');
 
-    function buildTable(data) {
-        var tableBody = $('#materiasTableBody');
-        tableBody.empty();
-        data.forEach(function (materia) {
-            var row = $('<tr>');
-            row.append('<td>' + materia.nombre + '</td>');
-            row.append('<td>' + materia.costo + '</td>');
-            row.append('<td><button class="btn btn-outline-warning btnActualizar" data-id="' + materia.idmateria + '"><i class="bi bi-pencil-square"></i></button></td>');
-            row.append('<td><button class="btn btn-outline-danger btnEliminar" data-id="' + materia.idmateria + '"><i class="bi bi-trash3-fill"></i></button></td>');
-            tableBody.append(row);
-        });
-
-        $('.btnActualizar').on('click', function () {
-            var idMateria = $(this).data('id');
-            $.ajax({
-                url: 'http://localhost:8080/DPAPI/getMateria/' + idMateria,
-                type: 'GET',
-                dataType: 'json',
-                success: function (materia) {
-                    $('#nombre').val(materia.nombre);
-                    $('#costo').val(materia.costo);
-                    $('#GuardarInformacion').data('materia-id', idMateria);
-                    $('#exampleModal').modal('show');
-                },
-                error: function (error) {
-                    console.error('Error al obtener información de la materia:', error);
-                }
+                tableBody.append(row);
             });
-        });
-
-
-        $('.btnEliminar').on('click', function () {
-            var idMateria = $(this).data('id');
-
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: 'Esta acción no se puede deshacer.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    eliminarMatera(idMateria);
-                }
-            });
-        });
-
-        function eliminarMatera(idMateria) {
-            $.ajax({
-                url: 'http://localhost:8080/DPAPI/deleteMateria/' + idMateria,
-                type: 'DELETE',
-                success: function (response) {
-                    console.log('Materia eliminada correctamente:', response);
-
-                    $.ajax({
-                        url: 'http://localhost:8080/DPAPI/getAllMaterias',
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function (data) {
-                            buildTable(data);
-                            $('#myTable').DataTable();
-                        },
-                        error: function (error) {
-                            console.error('Error al obtener los datos:', error);
-                        }
-                    });
-                },
-                error: function (error) {
-                    console.error('Error al eliminar materia:', error);
-                }
-            });
+//            $('.btnActualizar').on('click', function () {
+//                var idMateria = $(this).data('id');
+//                $.ajax({
+//                    url: 'http://localhost:8080/DPAPI/getMateria/' + idMateria,
+//                    type: 'GET',
+//                    dataType: 'json',
+//                    success: function (materia) {
+//                        $('#nombre').val(materia.nombre);
+//                        $('#costo').val(materia.costo);
+//                        $('#GuardarInformacion').data('materia-id', idMateria);
+//                        $('#exampleModal').modal('show');
+//                    },
+//                    error: function (error) {
+//                        console.error('Error al obtener información de la materia:', error);
+//                    }
+//                });
+//            });
+//
+//
+//            $('.btnEliminar').on('click', function () {
+//                var idMateria = $(this).data('id');
+//
+//                Swal.fire({
+//                    title: '¿Estás seguro?',
+//                    text: 'Esta acción no se puede deshacer.',
+//                    icon: 'warning',
+//                    showCancelButton: true,
+//                    confirmButtonColor: '#3085d6',
+//                    cancelButtonColor: '#d33',
+//                    confirmButtonText: 'Sí, eliminar'
+//                }).then((result) => {
+//                    if (result.isConfirmed) {
+//                        eliminarMatera(idMateria);
+//                    }
+//                });
+//            });
+//
+//            function eliminarMatera(idMateria) {
+//                $.ajax({
+//                    url: 'http://localhost:8080/DPAPI/deleteMateria/' + idMateria,
+//                    type: 'DELETE',
+//                    success: function (response) {
+//                        console.log('Materia eliminada correctamente:', response);
+//
+//                        $.ajax({
+//                            url: 'http://localhost:8080/DPAPI/getAllMaterias',
+//                            type: 'GET',
+//                            dataType: 'json',
+//                            success: function (data) {
+//                                buildTable(data);
+//                                $('#myTable').DataTable();
+//                            },
+//                            error: function (error) {
+//                                console.error('Error al obtener los datos:', error);
+//                            }
+//                        });
+//                    },
+//                    error: function (error) {
+//                        console.error('Error al eliminar materia:', error);
+//                    }
+//                });
+//            }
         }
     }
-
-
-
-    $(document).ready(function () {
-        var materiaUpdate;
-
-        $.ajax({
-            url: 'http://localhost:8080/DPAPI/getAllMaterias',
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                buildTable(data);
-                $('#myTable').DataTable();
-            },
-            error: function (error) {
-                console.error('Error al obtener los datos:', error);
-            }
-        });
-        $('#exampleModal').on('hidden.bs.modal', function () {
-            materiaUpdate = null;
-        });
-        $('#GuardarInformacion').on('click', function () {
-
-            var idMateria = $(this).data('materia-id');
-
-            var data = {
-                nombre: $('#nombre').val(),
-                costo: $('#costo').val()
-            };
-
-            $("#exampleModal .modal-content").LoadingOverlay("show", {
-                background: "#E0E0E0"
-            });
-
-            if (idMateria && idMateria > 0) {
-                $.ajax({
-                    url: 'http://localhost:8080/DPAPI/updateMateria/' + idMateria,
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(data),
-                    success: function (response) {
-                        console.log('materia actualizada correctamente', response);
-                        setTimeout(function () {
-                            materiaUpdate = null;
-                            $("#exampleModal .modal-content").LoadingOverlay("hide", true);
-                            $('#exampleModal').modal('hide');
-                        }, 500);
-                    },
-                    error: function (error) {
-                        console.error('Error al actualizar materia:', error);
-
-                        materiaUpdate = null;
-
-                        $("#exampleModal .modal-content").LoadingOverlay("hide", true);
-                    }
-                });
-            } else {
-
-                $.ajax({
-                    url: 'http://localhost:8080/DPAPI/addMateria',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(data),
-                    success: function (response) {
-                        console.log('Materia agregada correctamente', response);
-                        setTimeout(function () {
-                            // Ocultar LoadingOverlay después de 3 segundos
-                            $("#exampleModal .modal-content").LoadingOverlay("hide", true);
-                            $('#exampleModal').modal('hide');
-                        }, 500);
-                        getAllMaterias();
-                    },
-                    error: function (error) {
-                        console.error('Error al agregar materia:', error);
-
-                        $("#exampleModal .modal-content").LoadingOverlay("hide", true);
-                    }
-                });
-            }
-        });
-
-        $('.btnActualizar').on('click', function () {
-            var idMateria = $(this).data('id');
-            $.ajax({
-                url: 'http://localhost:8080/DPAPI/getMateria/' + idMateria,
-                type: 'GET',
-                dataType: 'json',
-                success: function (materia) {
-                    $('#nombre').val(materia.nombre);
-                    $('#apellidopaterno').val(materia.costo);
-                    $('#GuardarInformacion').data('materia-id', idMateria);
-                    $('#exampleModal').modal('show');
-                },
-                error: function (error) {
-                    console.error('Error al obtener información de la materia:', error);
-                }
-            });
-        });
-    });
 </script>
 <style>
 
