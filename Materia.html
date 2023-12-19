@@ -128,8 +128,8 @@
                     </nav>
                     <div class="container mb-4">
                         <div class="d-grid gap-2">
-                            <a data-bs-toggle="modal" data-bs-target="#exampleModal" id="AgregarAlumnoModal" class="btn btn-outline-success" type="button">
-                                <i class="bi bi-journals"></i>    Registrar Alumno
+                            <a data-bs-toggle="modal" data-bs-target="#exampleModal" id="AgregarMateriaModal" class="btn btn-outline-success" type="button">
+                                <i class="bi bi-journals"></i>    Registrar Materia
                             </a>
                         </div>
                     </div>
@@ -138,13 +138,12 @@
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
-                                    <th>Apellido Paterno</th>
-                                    <th>Apellido Materno</th>
+                                    <th>Costo</th>
                                     <th>Editar</th>
                                     <th>Eliminar</th>
                                 </tr>
                             </thead>
-                            <tbody id="alumnoTableBody">
+                            <tbody id="materiasTableBody">
 
                             </tbody>
                         </table>
@@ -155,7 +154,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
 
-                                    <h5 class="modal-title" id="exampleModalLabel">Detalles del alumno</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Detalles de la Materia</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
@@ -164,12 +163,8 @@
                                         <input type="text" class="form-control" id="nombre" required autocomplete="off">
                                     </div>
                                     <div class="mb-3">
-                                        <label for="costo" class="form-label">Apellid paterno</label>
-                                        <input type="text" class="form-control" id="apellidopaterno" required autocomplete="off">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="costo" class="form-label">Apellid materno</label>
-                                        <input type="text" class="form-control" id="apellidomaterno" required autocomplete="off">
+                                        <label for="costo" class="form-label">Costo:</label>
+                                        <input type="text" class="form-control" id="costo" required autocomplete="off">
                                     </div>
                                 </div>
 
@@ -204,7 +199,7 @@
 
     $(document).ready(function () {
 
-        getAllAlumnos();
+        getAllMaterias();
 
         $('#GuardarInformacion').on('click', function () {
 
@@ -214,9 +209,9 @@
         });
     });
 
-    function getAllAlumnos() {
+    function getAllMaterias() {
         $.ajax({
-            url: 'http://localhost:8080/DPAPI/getAllAlumnos',
+            url: 'http://localhost:8080/DPAPI/getAllMaterias',
             type: 'GET',
             dataType: 'json',
             success: function (data) {
@@ -230,40 +225,38 @@
     }
 
     function buildTable(data) {
-        var tableBody = $('#alumnoTableBody');
+        var tableBody = $('#materiasTableBody');
         tableBody.empty();
-        data.forEach(function (alumno) {
+        data.forEach(function (materia) {
             var row = $('<tr>');
-            row.append('<td>' + alumno.nombre + '</td>');
-            row.append('<td>' + alumno.apellidopaterno + '</td>');
-            row.append('<td>' + alumno.apellidomaterno + '</td>');
-            row.append('<td><button class="btn btn-outline-success btnActualizar" data-id="' + alumno.idalumno + '"><i class="bi bi-pencil-square"></i></button></td>');
-            row.append('<td><button class="btn btn-outline-danger btnEliminar" data-id="' + alumno.idalumno + '"><i class="bi bi-trash3-fill"></i></button></td>');
+            row.append('<td>' + materia.nombre + '</td>');
+            row.append('<td>' + materia.costo + '</td>');
+            row.append('<td><button class="btn btn-outline-warning btnActualizar" data-id="' + materia.idmateria + '"><i class="bi bi-pencil-square"></i></button></td>');
+            row.append('<td><button class="btn btn-outline-danger btnEliminar" data-id="' + materia.idmateria + '"><i class="bi bi-trash3-fill"></i></button></td>');
             tableBody.append(row);
         });
 
         $('.btnActualizar').on('click', function () {
-            var idAlumno = $(this).data('id');
+            var idMateria = $(this).data('id');
             $.ajax({
-                url: 'http://localhost:8080/DPAPI/getAlumno/' + idAlumno,
+                url: 'http://localhost:8080/DPAPI/getMateria/' + idMateria,
                 type: 'GET',
                 dataType: 'json',
-                success: function (alumno) {
-                    $('#nombre').val(alumno.nombre);
-                    $('#apellidopaterno').val(alumno.apellidopaterno);
-                    $('#apellidomaterno').val(alumno.apellidomaterno);
-                    $('#GuardarInformacion').data('alumno-id', idAlumno);
+                success: function (materia) {
+                    $('#nombre').val(materia.nombre);
+                    $('#costo').val(materia.costo);
+                    $('#GuardarInformacion').data('materia-id', idMateria);
                     $('#exampleModal').modal('show');
                 },
                 error: function (error) {
-                    console.error('Error al obtener información del alumno:', error);
+                    console.error('Error al obtener información de la materia:', error);
                 }
             });
         });
 
 
         $('.btnEliminar').on('click', function () {
-            var idAlumno = $(this).data('id');
+            var idMateria = $(this).data('id');
 
             Swal.fire({
                 title: '¿Estás seguro?',
@@ -275,20 +268,20 @@
                 confirmButtonText: 'Sí, eliminar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    eliminarAlumno(idAlumno);
+                    eliminarMatera(idMateria);
                 }
             });
         });
 
-        function eliminarAlumno(idAlumno) {
+        function eliminarMatera(idMateria) {
             $.ajax({
-                url: 'http://localhost:8080/DPAPI/deleteAlumno/' + idAlumno,
+                url: 'http://localhost:8080/DPAPI/deleteMateria/' + idMateria,
                 type: 'DELETE',
                 success: function (response) {
-                    console.log('Alumno eliminado correctamente:', response);
+                    console.log('Materia eliminada correctamente:', response);
 
                     $.ajax({
-                        url: 'http://localhost:8080/DPAPI/getAllAlumnos',
+                        url: 'http://localhost:8080/DPAPI/getAllMaterias',
                         type: 'GET',
                         dataType: 'json',
                         success: function (data) {
@@ -301,7 +294,7 @@
                     });
                 },
                 error: function (error) {
-                    console.error('Error al eliminar alumno:', error);
+                    console.error('Error al eliminar materia:', error);
                 }
             });
         }
@@ -310,10 +303,10 @@
 
 
     $(document).ready(function () {
-        var alumnoUpdate;
+        var materiaUpdate;
 
         $.ajax({
-            url: 'http://localhost:8080/DPAPI/getAllAlumnos',
+            url: 'http://localhost:8080/DPAPI/getAllMaterias',
             type: 'GET',
             dataType: 'json',
             success: function (data) {
@@ -325,40 +318,39 @@
             }
         });
         $('#exampleModal').on('hidden.bs.modal', function () {
-            alumnoUpdate = null;
+            materiaUpdate = null;
         });
         $('#GuardarInformacion').on('click', function () {
 
-            var idAlumno = $(this).data('alumno-id');
+            var idMateria = $(this).data('materia-id');
 
             var data = {
                 nombre: $('#nombre').val(),
-                apellidopaterno: $('#apellidopaterno').val(),
-                apellidomaterno: $('#apellidomaterno').val()
+                costo: $('#costo').val()
             };
 
             $("#exampleModal .modal-content").LoadingOverlay("show", {
                 background: "#E0E0E0"
             });
 
-            if (idAlumno && idAlumno > 0) {
+            if (idMateria && idMateria > 0) {
                 $.ajax({
-                    url: 'http://localhost:8080/DPAPI/updateAlumno/' + idAlumno,
+                    url: 'http://localhost:8080/DPAPI/updateMateria/' + idMateria,
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(data),
                     success: function (response) {
-                        console.log('alumno actualizado correctamente', response);
+                        console.log('materia actualizada correctamente', response);
                         setTimeout(function () {
-                            alumnoUpdate = null;
+                            materiaUpdate = null;
                             $("#exampleModal .modal-content").LoadingOverlay("hide", true);
                             $('#exampleModal').modal('hide');
                         }, 500);
                     },
                     error: function (error) {
-                        console.error('Error al actualizar el alumno:', error);
+                        console.error('Error al actualizar materia:', error);
 
-                        alumnoUpdate = null;
+                        materiaUpdate = null;
 
                         $("#exampleModal .modal-content").LoadingOverlay("hide", true);
                     }
@@ -366,21 +358,21 @@
             } else {
 
                 $.ajax({
-                    url: 'http://localhost:8080/DPAPI/addAlumno',
+                    url: 'http://localhost:8080/DPAPI/addMateria',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(data),
                     success: function (response) {
-                        console.log('Alumno agregado correctamente', response);
+                        console.log('Materia agregada correctamente', response);
                         setTimeout(function () {
                             // Ocultar LoadingOverlay después de 3 segundos
                             $("#exampleModal .modal-content").LoadingOverlay("hide", true);
                             $('#exampleModal').modal('hide');
                         }, 500);
-                        getAllAlumnos();
+                        getAllMaterias();
                     },
                     error: function (error) {
-                        console.error('Error al agregar alumno:', error);
+                        console.error('Error al agregar materia:', error);
 
                         $("#exampleModal .modal-content").LoadingOverlay("hide", true);
                     }
@@ -389,20 +381,19 @@
         });
 
         $('.btnActualizar').on('click', function () {
-            var idAlumno = $(this).data('id');
+            var idMateria = $(this).data('id');
             $.ajax({
-                url: 'http://localhost:8080/DPAPI/getAlumno/' + idAlumno,
+                url: 'http://localhost:8080/DPAPI/getMateria/' + idMateria,
                 type: 'GET',
                 dataType: 'json',
-                success: function (alumno) {
-                    $('#nombre').val(alumno.nombre);
-                    $('#apellidopaterno').val(alumno.apellidopaterno);
-                    $('#apellidopaterno').val(alumno.apellidopaterno);
-                    $('#GuardarInformacion').data('alumno-id', idAlumno);
+                success: function (materia) {
+                    $('#nombre').val(materia.nombre);
+                    $('#apellidopaterno').val(materia.costo);
+                    $('#GuardarInformacion').data('materia-id', idMateria);
                     $('#exampleModal').modal('show');
                 },
                 error: function (error) {
-                    console.error('Error al obtener información del alumno:', error);
+                    console.error('Error al obtener información de la materia:', error);
                 }
             });
         });
@@ -9404,3 +9395,4 @@
     }
 
 </style>
+
