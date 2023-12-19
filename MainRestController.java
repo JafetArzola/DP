@@ -154,7 +154,7 @@ public class MainRestController {
 //-----------------------------------------------------------------
     //Servicios para alumnomateria
     //Servicio para obtener a un alumno junto con todas sus materias
-    @GetMapping("/getAlumnoMateria")
+    @PostMapping("/getAlumnoMateria")
     public List<alumnomateria> getAlumnoMateria(@RequestBody alumnomateria alumnomateria) {
         return alumnoMateriaRepository.getMateriaByIdAlumno(alumnomateria.getIdalumno().getIdalumno());
     }

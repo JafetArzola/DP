@@ -239,7 +239,13 @@
             row.append('<td>' + alumno.apellidomaterno + '</td>');
             row.append('<td><button class="btn btn-outline-success btnActualizar" data-id="' + alumno.idalumno + '"><i class="bi bi-pencil-square"></i></button></td>');
             row.append('<td><button class="btn btn-outline-danger btnEliminar" data-id="' + alumno.idalumno + '"><i class="bi bi-trash3-fill"></i></button></td>');
+            row.append('<td><a class="btn btn-outline-info" href="AlumnoMateria?idalumno=' + alumno.idalumno + '">Ver Alumnomateria</a></td>');
             tableBody.append(row);
+        });
+
+        $('.btnVerAlumNomMateria').on('click', function () {
+            var idAlumno = $(this).data('idalumno');
+            window.location.href = '/DP/AlumnoMateria?idalumno=' + idAlumno;
         });
 
         $('.btnActualizar').on('click', function () {
