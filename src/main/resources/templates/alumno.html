@@ -1,23 +1,29 @@
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layaout"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}"> 
 
+    <head>
+        <title>Alumnos</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+
     <body layout:fragment="body">
-        </br>
-        </br>
-        </br>
+        <br>
+        <br>
+        <br>
         <div class="container">
             <center>
                 <h1>Listado de materias</h1>
             </center>
-            </br>
-            </br>
+            <br>
+            <br>
             <div class="row">
                 <center>
                     <a th:href="@{/DP/alumno/{idalumno}(idalumno=0)}" class="col-md-2 btn btn-info" data-bs-toggle="modal" data-bs-target="#myModal">Agregar alumno</a>
                 </center>
             </div>
-            </br>
+            <br>
             <form th:action="@{/DP/alumno}" method="post" th:object="${alumno}" enctype="multipart/form-data">
                 <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -54,7 +60,7 @@
                     </div>
                 </div>
             </form>
-            </br>
+            <br>
             <table class="table table-striped">
                 <thead class="table-dark">
                     <tr>
@@ -85,25 +91,28 @@
             </table>
         </div>
     </body>
-</html>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Obtener todos los botones de editar
-        var btnEditar = document.querySelectorAll('.btn-editar');
 
-        // Agregar un evento de clic a cada botón
-        btnEditar.forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                // Obtener los datos del alumno actual
-                var nombre = btn.getAttribute('data-nombre');
-                var apellidoPaterno = btn.getAttribute('data-apellidopaterno');
-                var apellidoMaterno = btn.getAttribute('data-apellidomaterno');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Obtener todos los botones de editar
+            var btnEditar = document.querySelectorAll('.btn-editar');
 
-                // Insertar los datos en el modal
-                document.querySelector('#myModal input[name="nombre"]').value = nombre;
-                document.querySelector('#myModal input[name="apellidopaterno"]').value = apellidoPaterno;
-                document.querySelector('#myModal input[name="apellidomaterno"]').value = apellidoMaterno;
+            // Agregar un evento de clic a cada botón
+            btnEditar.forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    // Obtener los datos del alumno actual
+                    var nombre = btn.getAttribute('data-nombre');
+                    var apellidoPaterno = btn.getAttribute('data-apellidopaterno');
+                    var apellidoMaterno = btn.getAttribute('data-apellidomaterno');
+
+                    // Insertar los datos en el modal
+                    document.querySelector('#myModal input[name="nombre"]').value = nombre;
+                    document.querySelector('#myModal input[name="apellidopaterno"]').value = apellidoPaterno;
+                    document.querySelector('#myModal input[name="apellidomaterno"]').value = apellidoMaterno;
+                });
             });
         });
-    });
-</script>
+    </script>
+
+</html>
+
