@@ -18,7 +18,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
         <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-        <title>Materia</title>
+        <title>Materias</title>
 
         <!-- Custom fonts for this template-->
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -77,6 +77,11 @@
                         <i class="bi bi-person-add"></i>
                         <span>Alumnos</span></a>
                 </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/DP/alumnoSP">
+                        <i class="bi bi-person-add"></i>
+                        <span>Alumnos con SP</span></a>
+                </li>
 
                 <!-- Divider -->
                 <hr class="sidebar-divider">
@@ -86,9 +91,14 @@
                     Asignaturas
                 </div>
                 <li class="nav-item active">
-                    <a class="nav-link" href="/DP/Materia">
+                    <a class="nav-link" href="/DP/materia">
                         <i class="bi bi-bookmark-check"></i>
                         <span>Materias</span></a>
+                </li>
+                 <li class="nav-item active">
+                    <a class="nav-link" href="/DP/MateriaSP">
+                        <i class="bi bi-bookmark-check"></i>
+                        <span>Materias con SP</span></a>
                 </li>
                 <!-- Divider -->
                 <hr class="sidebar-divider">
@@ -101,6 +111,11 @@
                     <a class="nav-link" href="/DP/AlumnoMateria">
                         <i class="bi bi-journal-text"></i>
                         <span>Alumno Materia</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/DP/AlumnoMateriaSP">
+                        <i class="bi bi-journal-text"></i>
+                        <span>Alumno Materia con SP</span></a>
                 </li>
                 <!-- Divider -->
                 <hr class="sidebar-divider d-none d-md-block">
@@ -201,44 +216,10 @@
 
         getAllMaterias();
 
-        // Evento click del botón "GuardarInformacion"
         $('#GuardarInformacion').on('click', function () {
-            // Obtener valores de los campos del modal
-            var nombre = $('#nombre').val();
-            var costo = $('#costo').val();
 
-            // Crear objeto de datos
-            var data = {
-                nombre: nombre,
-                costo: costo
-            };
-
-            // Mostrar LoadingOverlay solo en la sección del modal
             $("#exampleModal .modal-content").LoadingOverlay("show", {
                 background: "#E0E0E0"
-            });
-
-            // Realizar la solicitud Ajax para agregar materia
-            $.ajax({
-                url: 'http://localhost:8080/DPAPI/addMateria',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                success: function (response) {
-                    console.log('Materia agregada exitosamente:', response);
-                    setTimeout(function () {
-                        // Ocultar LoadingOverlay después de 3 segundos
-                        $("#exampleModal .modal-content").LoadingOverlay("hide", true);
-                        $('#exampleModal').modal('hide');
-                    }, 500);
-                    getAllMaterias();
-                },
-                error: function (error) {
-                    console.error('Error al agregar materia:', error);
-
-                    // Ocultar LoadingOverlay después de completar la operación (aunque haya un error)
-                    $("#exampleModal .modal-content").LoadingOverlay("hide", true);
-                }
             });
         });
     });
@@ -279,10 +260,7 @@
                 success: function (materia) {
                     $('#nombre').val(materia.nombre);
                     $('#costo').val(materia.costo);
-
-                    // Asegúrate de establecer el ID en el botón GuardarInformacion
                     $('#GuardarInformacion').data('materia-id', idMateria);
-
                     $('#exampleModal').modal('show');
                 },
                 error: function (error) {
@@ -305,24 +283,18 @@
                 confirmButtonText: 'Sí, eliminar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    eliminarMateria(idMateria);
+                    eliminarMatera(idMateria);
                 }
             });
         });
 
-        function eliminarMateria(idMateria) {
-            // Realiza la solicitud Ajax para eliminar la materia
+        function eliminarMatera(idMateria) {
             $.ajax({
                 url: 'http://localhost:8080/DPAPI/deleteMateria/' + idMateria,
                 type: 'DELETE',
                 success: function (response) {
-                    console.log('Materia eliminada exitosamente:', response);
+                    console.log('Materia eliminada correctamente:', response);
 
-                    // Recargar la tabla después de la eliminación (si es necesario)
-                    // Puedes volver a cargar todos los datos o solo el que se eliminó
-                    // Puedes usar la misma lógica que usaste para obtener datos iniciales
-
-                    // Ejemplo de recarga completa de datos
                     $.ajax({
                         url: 'http://localhost:8080/DPAPI/getAllMaterias',
                         type: 'GET',
@@ -346,8 +318,7 @@
 
 
     $(document).ready(function () {
-        // Variable global para almacenar el ID de la materia seleccionada
-        var materiaIdToUpdate;
+        var materiaUpdate;
 
         $.ajax({
             url: 'http://localhost:8080/DPAPI/getAllMaterias',
@@ -362,60 +333,78 @@
             }
         });
         $('#exampleModal').on('hidden.bs.modal', function () {
-            materiaIdToUpdate = null;
+            materiaUpdate = null;
         });
-        // Evento click del botón "GuardarInformacion"
         $('#GuardarInformacion').on('click', function () {
-            // Obtener valores de los campos del modal
-            var nombre = $('#nombre').val();
-            var costo = $('#costo').val();
 
-            // Obtener el ID de la materia de la variable global
-            var idMateria = materiaIdToUpdate;
+            var idMateria = $(this).data('materia-id');
 
-            // Crear objeto de datos
             var data = {
-                nombre: nombre,
-                costo: costo
+                nombre: $('#nombre').val(),
+                costo: $('#costo').val()
             };
 
-            // Mostrar LoadingOverlay solo en la sección del modal
             $("#exampleModal .modal-content").LoadingOverlay("show", {
                 background: "#E0E0E0"
             });
 
-            $.ajax({
-                url: 'http://localhost:8080/DPAPI/updateMateria/' + idMateria,
-                type: 'PUT',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                success: function (response) {
-                    console.log('Materia actualizada exitosamente:', response);
-                    setTimeout(function () {
-                        materiaIdToUpdate = null;
+            if (idMateria && idMateria > 0) {
+                $.ajax({
+                    url: 'http://localhost:8080/DPAPI/updateMateria/' + idMateria,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        console.log('materia actualizada correctamente', response);
+                        setTimeout(function () {
+                            materiaUpdate = null;
+                            $("#exampleModal .modal-content").LoadingOverlay("hide", true);
+                            $('#exampleModal').modal('hide');
+                        }, 500);
+                    },
+                    error: function (error) {
+                        console.error('Error al actualizar materia:', error);
+
+                        materiaUpdate = null;
+
                         $("#exampleModal .modal-content").LoadingOverlay("hide", true);
-                        $('#exampleModal').modal('hide');
-                    }, 500);
-                },
-                error: function (error) {
-                    console.error('Error al actualizar la materia:', error);
+                    }
+                });
+            } else {
 
-                    materiaIdToUpdate = null;
+                $.ajax({
+                    url: 'http://localhost:8080/DPAPI/addMateria',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        console.log('Materia agregada correctamente', response);
+                        setTimeout(function () {
+                            // Ocultar LoadingOverlay después de 3 segundos
+                            $("#exampleModal .modal-content").LoadingOverlay("hide", true);
+                            $('#exampleModal').modal('hide');
+                        }, 500);
+                        getAllMaterias();
+                    },
+                    error: function (error) {
+                        console.error('Error al agregar materia:', error);
 
-                    $("#exampleModal .modal-content").LoadingOverlay("hide", true);
-                }
-            });
+                        $("#exampleModal .modal-content").LoadingOverlay("hide", true);
+                    }
+                });
+            }
         });
 
         $('.btnActualizar').on('click', function () {
-            materiaIdToUpdate = $(this).data('id');
+            var idMateria = $(this).data('id');
             $.ajax({
-                url: 'http://localhost:8080/DPAPI/getMateria/' + materiaIdToUpdate,
+                url: 'http://localhost:8080/DPAPI/getMateria/' + idMateria,
                 type: 'GET',
                 dataType: 'json',
                 success: function (materia) {
                     $('#nombre').val(materia.nombre);
-                    $('#costo').val(materia.costo);
+                    $('#apellidopaterno').val(materia.costo);
+                    $('#GuardarInformacion').data('materia-id', idMateria);
                     $('#exampleModal').modal('show');
                 },
                 error: function (error) {
@@ -9421,4 +9410,3 @@
     }
 
 </style>
-
