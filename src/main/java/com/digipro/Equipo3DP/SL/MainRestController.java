@@ -5,8 +5,11 @@
 package com.digipro.Equipo3DP.SL;
 
 import com.digipro.Equipo3DP.DL.Alumno;
+import com.digipro.Equipo3DP.DL.alumnomateria;
+import com.digipro.Equipo3DP.DL.AlumnoMateriaRepository;
 import com.digipro.Equipo3DP.DL.AlumnoRepository;
 import com.digipro.Equipo3DP.DL.Materia;
+import com.digipro.Equipo3DP.DL.MateriaDAOImplementation;
 import com.digipro.Equipo3DP.DL.MateriaRepository;
 import java.util.List;
 import java.util.Optional;
@@ -31,11 +34,17 @@ public class MainRestController {
 
     private AlumnoRepository alumnoRepository;
     private MateriaRepository materiaRepository;
+    private AlumnoMateriaRepository alumnoMateriaRepository;
+    private MateriaDAOImplementation materiaDAOImplementation;
 
-    public MainRestController(AlumnoRepository alumnoRepository, MateriaRepository materiaRepository) {
+    public MainRestController(AlumnoRepository alumnoRepository, MateriaRepository materiaRepository, AlumnoMateriaRepository alumnoMateriaRepository, MateriaDAOImplementation materiaDAOImplementation) {
         this.alumnoRepository = alumnoRepository;
         this.materiaRepository = materiaRepository;
+        this.alumnoMateriaRepository = alumnoMateriaRepository;
+        this.materiaDAOImplementation = materiaDAOImplementation;
     }
+
+    
 
 //-----------------------------------------------------------------
     //Servicios para ALumno
@@ -76,7 +85,7 @@ public class MainRestController {
         materiaRepository.save(materia);
     }
 
-   @PostMapping("/updateMateria/{idmateria}")
+    @PostMapping("/updateMateria/{idmateria}")
     public ResponseEntity<String> updateMateria(@PathVariable int idmateria, @RequestBody Materia updatedMateria) {
         try {
             Materia existingMateria = materiaRepository.findById(idmateria)
@@ -97,12 +106,12 @@ public class MainRestController {
     public void deleteMateria(@PathVariable int idmateria) {
         materiaRepository.deleteById(idmateria);
     }
-    
+
     @GetMapping("/getMateria/{id}")
     public ResponseEntity<?> getMateria(@PathVariable int id) {
         try {
             Optional<Materia> optionalMateria = materiaRepository.findById(id);
-            
+
             if (optionalMateria.isPresent()) {
                 Materia materia = optionalMateria.get();
                 return ResponseEntity.ok(materia);
@@ -114,4 +123,40 @@ public class MainRestController {
                     .body("Error al obtener la materia: " + e.getMessage());
         }
     }
+
+    
+    
+    //Logica para consumir Get All  SP 
+    @GetMapping("/obtenerMaterias")
+    public ResponseEntity<List<Materia>> obtenerMaterias() {
+        List<Materia> materias = materiaRepository.obtenerMaterias();
+        return new ResponseEntity<>(materias, HttpStatus.OK);
+    }
+    
+//-----------------------------------------------------------------
+    //Servicios para alumnomateria
+    //Servicio para obtener a un alumno junto con todas sus materias
+    @GetMapping("/getAlumnoMateria")
+    public List<alumnomateria> getAlumnoMateria(@RequestBody alumnomateria alumnomateria) {
+        return alumnoMateriaRepository.getMateriaByIdAlumno(alumnomateria.getIdalumno().getIdalumno());
+    }
+
+    //Servicio para añadir una materia a un alumno; donde idAlumnoMateria sea igual a '0'
+    @PostMapping("/addAlumnoMateria")
+    public void addAlumnoMateria(@RequestBody alumnomateria alumnomateria) {
+        alumnoMateriaRepository.save(alumnomateria);
+    }
+
+    //Servicio para editar una materia registrada por un alumno; donde idAlumnoMateria sea diferente de '0'
+    @PostMapping("/updateAlumnoMateria")
+    public void updateAlumnoMateria(@RequestBody alumnomateria alumnomateria) {
+        alumnoMateriaRepository.save(alumnomateria);
+    }
+
+    //Servicio para eliminar una materia registrada por el alumno
+    @PostMapping("/deleteAlumnoMateria")
+    public void deleteAlumnoMateria(@RequestBody alumnomateria alumnomateria) {
+        alumnoMateriaRepository.delete(alumnomateria);
+    }
+
 }

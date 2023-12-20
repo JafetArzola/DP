@@ -1,7 +1,6 @@
-<!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layaout"> 
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layaout"
+      layout:decorate="~{layout}">
 
     <head>
 
@@ -31,10 +30,6 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
 
-        <!-- Incluye SweetAlert CSS y JS en tu HTML -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 
     </head>
 
@@ -61,7 +56,7 @@
                 </div>
                 <!-- Nav Item - Dashboard -->
                 <li class="nav-item active">
-                    <a class="nav-link"  href="/DP/home" >
+                    <a class="nav-link" href="index.html">
                         <i class="bi bi-house-check"></i>
                         <span>Pagina principal</span></a>
                 </li>
@@ -73,7 +68,7 @@
                 </div>
                 <!-- Nav Item - Dashboard -->
                 <li class="nav-item active">
-                    <a class="nav-link" href="/DP/alumno">
+                    <a class="nav-link" href="index.html">
                         <i class="bi bi-person-add"></i>
                         <span>Alumnos</span></a>
                 </li>
@@ -86,7 +81,7 @@
                     Asignaturas
                 </div>
                 <li class="nav-item active">
-                    <a class="nav-link" href="/DP/Materia">
+                    <a class="nav-link" href="index.html">
                         <i class="bi bi-bookmark-check"></i>
                         <span>Materias</span></a>
                 </li>
@@ -98,7 +93,7 @@
                     Asignación
                 </div>
                 <li class="nav-item active">
-                    <a class="nav-link" href="/DP/AlumnoMateria">
+                    <a class="nav-link" href="index.html">
                         <i class="bi bi-journal-text"></i>
                         <span>Alumno Materia</span></a>
                 </li>
@@ -129,7 +124,7 @@
                     <div class="container mb-4">
                         <div class="d-grid gap-2">
                             <a data-bs-toggle="modal" data-bs-target="#exampleModal" id="AgregarMateriaModal" class="btn btn-outline-success" type="button">
-                                <i class="bi bi-backpack3"></i>    Registrar Alumno Materia
+                                <i class="bi bi-journals"></i>    Registrar Alumno
                             </a>
                         </div>
                     </div>
@@ -138,12 +133,13 @@
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
-                                    <th>Materia</th>
+                                    <th>Apellido Paterno</th>
+                                    <th>Apellido Materno</th>
                                     <th>Editar</th>
                                     <th>Eliminar</th>
                                 </tr>
                             </thead>
-                            <tbody id="materiasTableBody">
+                            <tbody id="alumnosTableBody">
 
                             </tbody>
                         </table>
@@ -153,21 +149,23 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-
-                                    <h5 class="modal-title" id="exampleModalLabel">Alumno Materia</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">Detalles del Alumno</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
                                         <label for="nombre" class="form-label">Nombre:</label>
-                                        <input type="text" class="form-control" id="nombre" required autocomplete="off">
+                                        <input type="text" class="form-control" id="nombre">
                                     </div>
                                     <div class="mb-3">
-                                        <label for="costo" class="form-label">Materia: </label>
-                                        <input type="text" class="form-control" id="materia" required autocomplete="off">
+                                        <label for="costo" class="form-label">Apellido Paterno:</label>
+                                        <input type="text" class="form-control" id="apellidopaterno">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="costo" class="form-label">Apellido Materno:</label>
+                                        <input type="text" class="form-control" id="apellidomaterno">
                                     </div>
                                 </div>
-
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cerrar</button>
                                     <button type="button" class="btn btn-outline-success" id="GuardarInformacion">Guardar cambios</button>
@@ -190,7 +188,159 @@
             </div>
         </footer>
     </body>
+
 </html>
+
+<!-- jQuery LoadingOverlay -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-loading-overlay/2.1.7/loadingoverlay.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Obtener datos iniciales
+        $.ajax({
+            url: 'http://localhost:8080/DPAPI/getAllAlumnos',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                buildTable(data);
+                $('#myTable').DataTable();
+            },
+            error: function (error) {
+                console.error('Error al obtener los datos:', error);
+            }
+        });
+
+        // Evento click del botón "GuardarInformacion"
+        $('#GuardarInformacion').on('click', function () {
+            // Obtener valores de los campos del modal
+            var nombre = $('#nombre').val();
+            var apellidopaterno = $('#apellidopaterno').val();
+            var apellidomaterno = $('#apellidomaterno').val();
+
+            // Crear objeto de datos
+            var data = {
+                nombre: nombre,
+                apellidopaterno: apellidopaterno,
+                apellidomaterno: apellidomaterno
+            };
+
+            // Verificar si el alumno ya tiene un ID asignado
+            var idalumno = $('#GuardarInformacion').data('id');
+            if (idalumno !== undefined && idalumno !== null) {
+                // Si tiene un ID, realizar la solicitud Ajax para actualizar al alumno
+                $.ajax({
+                    url: 'http://localhost:8080/DPAPI/updateAlumno',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        console.log('Alumno actualizado exitosamente:', response);
+                        reloadTable(); // Recargar la tabla después de la actualización
+                        $('#exampleModal').modal('hide'); // Ocultar el modal después de completar la operación
+                    },
+                    error: function (error) {
+                        console.error('Error al actualizar alumno', error);
+                    }
+                });
+            } else {
+                // Si no tiene un ID, realizar la solicitud Ajax para agregar al nuevo alumno
+                $.ajax({
+                    url: 'http://localhost:8080/DPAPI/addAlumno',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        console.log('Alumno registrado exitosamente:', response);
+                        reloadTable(); // Recargar la tabla después de la adición
+                        $('#exampleModal').modal('hide'); // Ocultar el modal después de completar la operación
+                    },
+                    error: function (error) {
+                        console.error('Error al registrar alumno', error);
+                    }
+                });
+            }
+        });
+    });
+
+    function reloadTable() {
+        $.ajax({
+            url: 'http://localhost:8080/DPAPI/getAllAlumnos',
+            type: 'GET',
+            dataType: 'application/json',
+            success: function (data) {
+                buildTable(data);
+                $('#myTable').DataTable();
+            },
+            error: function (error) {
+                console.error('Error al obtener los datos:', error);
+            }
+        });
+    }
+
+    // Funciones auxiliares
+    function buildTable(data) {
+        var tableBody = $('#alumnosTableBody');
+        tableBody.empty();
+        data.forEach(function (alumno) {
+            var row = $('<tr>');
+            row.append('<td>' + alumno.nombre + '</td>');
+            row.append('<td>' + alumno.apellidopaterno + '</td>');
+            row.append('<td>' + alumno.apellidomaterno + '</td>');
+
+            // Crear botón de editar
+            var editarButton = $('<button class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModal" data-idalumno="' + alumno.idalumno + '"><i class="bi bi-pencil-fill"></i></button>');
+            editarButton.on('click', function () {
+                editar(alumno); // Pasar el objeto alumno a la función editar
+            });
+
+            // Agregar botón de editar a la fila
+            row.append($('<td>').append(editarButton));
+
+            row.append('<td><button class="btn btn-outline-danger btnEliminar" data-id="' + alumno.idalumno + '"><i class="bi bi-trash3-fill"></i></button></td>');
+            tableBody.append(row);
+        });
+    }
+
+    function editar(alumno) {
+        console.log('Editar alumno con ID: ' + alumno.idalumno);
+
+        // Llenar los campos del modal con la información del alumno
+        $('#nombre').val(alumno.nombre);
+        $('#apellidopaterno').val(alumno.apellidopaterno);
+        $('#apellidomaterno').val(alumno.apellidomaterno);
+
+        // Establecer el ID del alumno en el botón "GuardarInformacion"
+        $('#GuardarInformacion').data('id', alumno.idAlumno);
+
+        // Mostrar el modal
+        $('#exampleModal').modal('show');
+    }
+
+    function eliminar(idAlumno) {
+        $.ajax({
+            url: 'http://localhost:8080/DPAPI/deleteAlumno/' + idAlumno,
+            type: 'DELETE',
+            success: function (response) {
+                console.log('Materia eliminada exitosamente:', response);
+                $.ajax({
+                    url: 'http://localhost:8080/DPAPI/getAllAlumnos',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        buildTable(data);
+                        $('#myTable').DataTable();
+                    },
+                    error: function (error) {
+                        console.error('Error al obtener los datos:', error);
+                    }
+                });
+            },
+            error: function (error) {
+                console.error('Error al eliminar materia:', error);
+            }
+        });
+    }
+</script>
 <style>
 
     :root {
@@ -9187,4 +9337,3 @@
     }
 
 </style>
-

@@ -7,7 +7,6 @@ package com.digipro.Equipo3DP.PL;
 import com.digipro.Equipo3DP.DL.Alumno;
 import com.digipro.Equipo3DP.DL.AlumnoRepository;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 
@@ -29,7 +27,7 @@ import org.springframework.web.client.RestTemplate;
  * @author digis
  */
 @Controller
-@RequestMapping("/DP")
+@RequestMapping("/DP/alumno")
 public class MainController {
 
     private AlumnoRepository alumnoRepository;
@@ -37,42 +35,43 @@ public class MainController {
     public MainController(AlumnoRepository alumnoRepository) {
         this.alumnoRepository = alumnoRepository;
     }
-    @GetMapping("/home")
+
+    @RequestMapping("/home")
     public String Home() {
         return "Bienvenida";
     }
 
     @RequestMapping("/alumno")
-    public String alumno(Model model) {
+    public String home(Model model) {
         RestTemplate restTemplate = new RestTemplate();
-
-        String apiURL = "http://localhost:8080/DPAPI/getAllAlumnos";
-
-        ResponseEntity<List<Alumno>> response = restTemplate.exchange(
-                apiURL,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<Alumno>>() {
-        });
-        List<Alumno> alumnos = response.getBody();
-        model.addAttribute("alumnos", alumnos);
+//
+//        String apiURL = "http://localhost:8080/DPAPI/getAllAlumnos";
+//
+//        ResponseEntity<List<Alumno>> response = restTemplate.exchange(
+//                apiURL,
+//                HttpMethod.GET,
+//                null,
+//                new ParameterizedTypeReference<List<Alumno>>() {
+//        });
+//        List<Alumno> alumnos = response.getBody();
+//        model.addAttribute("alumnos", alumnos);
 
         return "alumno";
     }
 
     @GetMapping("/alumno/{idalumno}")
     private String Form(@PathVariable int idalumno, Model model) {
-        if (idalumno == 0) {
-            model.addAttribute("alumno", new Alumno());
-            return "alumno";
-        } else {
-            Optional<Alumno> alumno = alumnoRepository.findById(idalumno);
-            if (alumno != null) {
-                model.addAttribute("alumno", alumno);
-            } else {
-                model.addAttribute("No existe el alumno");
-            }
-        }
+//        if (idalumno == 0) {
+//            model.addAttribute("alumno", new Alumno());
+//            return "alumno";
+//        } else {
+//            Alumno alumno = alumnoRepository.findById(idalumno);
+//            if (alumno != null) {
+//                model.addAttribute("alumno", alumno);
+//            } else {
+//                model.addAttribute("No existe el alumno");
+//            }
+//        }
         return "alumno";
     }
 
@@ -107,7 +106,7 @@ public class MainController {
         return "redirect:/DP/alumno";
     }
 
-    @GetMapping("/delete/{idalumno}")
+    @PostMapping("/eliminar/{idalumno}")
     public String eliminar(@PathVariable int idalumno) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -118,7 +117,7 @@ public class MainController {
 
         ResponseEntity<Void> response = restTemplate.exchange(
                 apiURL,
-                HttpMethod.POST,
+                HttpMethod.DELETE,
                 request,
                 new ParameterizedTypeReference<Void>() {
         });
@@ -135,28 +134,4 @@ public class MainController {
         return "alumnomateria";
     }
 
-    @GetMapping("/Materia")
-    public String Materia() {
-        return "Materia";
-    }
-    
-    @GetMapping("/alumnoSP")
-    public String alumnoSP() {
-        return "alumnoSP";
-    }
-    
-    @GetMapping("/MateriaSP")
-    public String MateriaSP() {
-        return "MateriaSP";
-    }
-    
-    @GetMapping("/AlumnoMateria")
-    public String AlumnoMateria() {
-        return "AlumnoMateria";
-    }
-    
-    @GetMapping("/AlumnoMateriaSP")
-    public String AlumnoMateriaSP() {
-        return "AlumnoMateriaSP";
-    }
 }

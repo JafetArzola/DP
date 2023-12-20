@@ -77,6 +77,11 @@
                         <i class="bi bi-person-add"></i>
                         <span>Alumnos</span></a>
                 </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/DP/alumnoSP">
+                        <i class="bi bi-person-add"></i>
+                        <span>Alumnos con SP</span></a>
+                </li>
 
                 <!-- Divider -->
                 <hr class="sidebar-divider">
@@ -90,6 +95,11 @@
                         <i class="bi bi-bookmark-check"></i>
                         <span>Materias</span></a>
                 </li>
+                 <li class="nav-item active">
+                    <a class="nav-link" href="/DP/MateriaSP">
+                        <i class="bi bi-bookmark-check"></i>
+                        <span>Materias con SP</span></a>
+                </li>
                 <!-- Divider -->
                 <hr class="sidebar-divider">
 
@@ -101,6 +111,11 @@
                     <a class="nav-link" href="/DP/AlumnoMateria">
                         <i class="bi bi-journal-text"></i>
                         <span>Alumno Materia</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/DP/AlumnoMateriaSP">
+                        <i class="bi bi-journal-text"></i>
+                        <span>Alumno Materia con SP</span></a>
                 </li>
                 <!-- Divider -->
                 <hr class="sidebar-divider d-none d-md-block">
@@ -196,21 +211,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-loading-overlay/2.1.7/loadingoverlay.min.js"></script>
 
 <script>
-    
+
     $(document).ready(function () {
 
-        $.ajax({
-            url: 'http://localhost:8080/DPAPI/getAllMaterias',
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                buildTable(data);
-                $('#myTable').DataTable();
-            },
-            error: function (error) {
-                console.error('Error al obtener los datos:', error);
-            }
-        });
+        getAllMaterias();
 
         // Evento click del botón "GuardarInformacion"
         $('#GuardarInformacion').on('click', function () {
@@ -242,6 +246,7 @@
                         $("#exampleModal .modal-content").LoadingOverlay("hide", true);
                         $('#exampleModal').modal('hide');
                     }, 500);
+                    getAllMaterias();
                 },
                 error: function (error) {
                     console.error('Error al agregar materia:', error);
@@ -251,98 +256,111 @@
                 }
             });
         });
-
-
-        function buildTable(data) {
-            var tableBody = $('#materiasTableBody');
-            tableBody.empty();
-            data.forEach(function (materia) {
-                var row = $('<tr>');
-                row.append('<td>' + materia.nombre + '</td>');
-                row.append('<td>' + materia.costo + '</td>');
-                row.append('<td><button class="btn btn-outline-warning btnActualizar" data-id="' + materia.idmateria + '"><i class="bi bi-pencil-square"></i></button></td>');
-                row.append('<td><button class="btn btn-outline-danger btnEliminar" data-id="' + materia.idmateria + '"><i class="bi bi-trash3-fill"></i></button></td>');
-                tableBody.append(row);
-            });
-
-            $('.btnActualizar').on('click', function () {
-                var idMateria = $(this).data('id');
-                $.ajax({
-                    url: 'http://localhost:8080/DPAPI/getMateria/' + idMateria,
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (materia) {
-                        $('#nombre').val(materia.nombre);
-                        $('#costo').val(materia.costo);
-
-                        // Asegúrate de establecer el ID en el botón GuardarInformacion
-                        $('#GuardarInformacion').data('materia-id', idMateria);
-
-                        $('#exampleModal').modal('show');
-                    },
-                    error: function (error) {
-                        console.error('Error al obtener información de la materia:', error);
-                    }
-                });
-            });
-
-
-            $('.btnEliminar').on('click', function () {
-                var idMateria = $(this).data('id');
-
-                Swal.fire({
-                    title: '¿Estás seguro?',
-                    text: 'Esta acción no se puede deshacer.',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Sí, eliminar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        eliminarMateria(idMateria);
-                    }
-                });
-            });
-
-            function eliminarMateria(idMateria) {
-                // Realiza la solicitud Ajax para eliminar la materia
-                $.ajax({
-                    url: 'http://localhost:8080/DPAPI/deleteMateria/' + idMateria,
-                    type: 'DELETE',
-                    success: function (response) {
-                        console.log('Materia eliminada exitosamente:', response);
-
-                        // Recargar la tabla después de la eliminación (si es necesario)
-                        // Puedes volver a cargar todos los datos o solo el que se eliminó
-                        // Puedes usar la misma lógica que usaste para obtener datos iniciales
-
-                        // Ejemplo de recarga completa de datos
-                        $.ajax({
-                            url: 'http://localhost:8080/DPAPI/getAllMaterias',
-                            type: 'GET',
-                            dataType: 'json',
-                            success: function (data) {
-                                buildTable(data);
-                                $('#myTable').DataTable();
-                            },
-                            error: function (error) {
-                                console.error('Error al obtener los datos:', error);
-                            }
-                        });
-                    },
-                    error: function (error) {
-                        console.error('Error al eliminar materia:', error);
-                    }
-                });
-            }
-        }
-
-
-
     });
 
-$(document).ready(function () {
+    function getAllMaterias() {
+        $.ajax({
+            url: 'http://localhost:8080/DPAPI/getAllMaterias',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                buildTable(data);
+                $('#myTable').DataTable();
+            },
+            error: function (error) {
+                console.error('Error al obtener los datos:', error);
+            }
+        });
+    }
+
+    function buildTable(data) {
+        var tableBody = $('#materiasTableBody');
+        tableBody.empty();
+        data.forEach(function (materia) {
+            var row = $('<tr>');
+            row.append('<td>' + materia.nombre + '</td>');
+            row.append('<td>' + materia.costo + '</td>');
+            row.append('<td><button class="btn btn-outline-warning btnActualizar" data-id="' + materia.idmateria + '"><i class="bi bi-pencil-square"></i></button></td>');
+            row.append('<td><button class="btn btn-outline-danger btnEliminar" data-id="' + materia.idmateria + '"><i class="bi bi-trash3-fill"></i></button></td>');
+            tableBody.append(row);
+        });
+
+        $('.btnActualizar').on('click', function () {
+            var idMateria = $(this).data('id');
+            $.ajax({
+                url: 'http://localhost:8080/DPAPI/getMateria/' + idMateria,
+                type: 'GET',
+                dataType: 'json',
+                success: function (materia) {
+                    $('#nombre').val(materia.nombre);
+                    $('#costo').val(materia.costo);
+
+                    // Asegúrate de establecer el ID en el botón GuardarInformacion
+                    $('#GuardarInformacion').data('materia-id', idMateria);
+
+                    $('#exampleModal').modal('show');
+                },
+                error: function (error) {
+                    console.error('Error al obtener información de la materia:', error);
+                }
+            });
+        });
+
+
+        $('.btnEliminar').on('click', function () {
+            var idMateria = $(this).data('id');
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Esta acción no se puede deshacer.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    eliminarMateria(idMateria);
+                }
+            });
+        });
+
+        function eliminarMateria(idMateria) {
+            // Realiza la solicitud Ajax para eliminar la materia
+            $.ajax({
+                url: 'http://localhost:8080/DPAPI/deleteMateria/' + idMateria,
+                type: 'DELETE',
+                success: function (response) {
+                    console.log('Materia eliminada exitosamente:', response);
+
+                    // Recargar la tabla después de la eliminación (si es necesario)
+                    // Puedes volver a cargar todos los datos o solo el que se eliminó
+                    // Puedes usar la misma lógica que usaste para obtener datos iniciales
+
+                    // Ejemplo de recarga completa de datos
+                    $.ajax({
+                        url: 'http://localhost:8080/DPAPI/getAllMaterias',
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            buildTable(data);
+                            $('#myTable').DataTable();
+                        },
+                        error: function (error) {
+                            console.error('Error al obtener los datos:', error);
+                        }
+                    });
+                },
+                error: function (error) {
+                    console.error('Error al eliminar materia:', error);
+                }
+            });
+        }
+    }
+
+
+
+    $(document).ready(function () {
         // Variable global para almacenar el ID de la materia seleccionada
         var materiaIdToUpdate;
 
@@ -358,7 +376,7 @@ $(document).ready(function () {
                 console.error('Error al obtener los datos:', error);
             }
         });
-$('#exampleModal').on('hidden.bs.modal', function () {
+        $('#exampleModal').on('hidden.bs.modal', function () {
             materiaIdToUpdate = null;
         });
         // Evento click del botón "GuardarInformacion"

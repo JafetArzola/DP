@@ -56,6 +56,10 @@ public class Alumno implements Serializable {
         this.apellidopaterno = apellidopaterno;
     }
     
+    public Alumno(int idalumno){
+        this.idalumno = idalumno;
+    }
+    
     public int getIdalumno() {
         return idalumno;
     }
