@@ -9,6 +9,7 @@ import com.digipro.Equipo3DP.DL.alumnomateria;
 import com.digipro.Equipo3DP.DL.AlumnoMateriaRepository;
 import com.digipro.Equipo3DP.DL.AlumnoRepository;
 import com.digipro.Equipo3DP.DL.Materia;
+import com.digipro.Equipo3DP.DL.MateriaDAOImplementation;
 import com.digipro.Equipo3DP.DL.MateriaRepository;
 import java.util.List;
 import java.util.Optional;
@@ -34,14 +35,16 @@ public class MainRestController {
     private AlumnoRepository alumnoRepository;
     private MateriaRepository materiaRepository;
     private AlumnoMateriaRepository alumnoMateriaRepository;
+    private MateriaDAOImplementation materiaDAOImplementation;
 
-    public MainRestController(AlumnoRepository alumnoRepository,
-            MateriaRepository materiaRepository,
-            AlumnoMateriaRepository alumnoMateriaRepository) {
+    public MainRestController(AlumnoRepository alumnoRepository, MateriaRepository materiaRepository, AlumnoMateriaRepository alumnoMateriaRepository, MateriaDAOImplementation materiaDAOImplementation) {
         this.alumnoRepository = alumnoRepository;
         this.materiaRepository = materiaRepository;
         this.alumnoMateriaRepository = alumnoMateriaRepository;
+        this.materiaDAOImplementation = materiaDAOImplementation;
     }
+
+    
 
 //-----------------------------------------------------------------
     //Servicios para ALumno
@@ -151,6 +154,15 @@ public class MainRestController {
         }
     }
 
+    
+    
+    //Logica para consumir Get All  SP 
+    @GetMapping("/obtenerMaterias")
+    public ResponseEntity<List<Materia>> obtenerMaterias() {
+        List<Materia> materias = materiaRepository.obtenerMaterias();
+        return new ResponseEntity<>(materias, HttpStatus.OK);
+    }
+    
 //-----------------------------------------------------------------
     //Servicios para alumnomateria
     //Servicio para obtener a un alumno junto con todas sus materias

@@ -52,8 +52,23 @@ public class MainController {
         return "materia";
     }
     
+    @GetMapping("/alumnoSP")
+    public String alumnoSP() {
+        return "alumnoSP";
+    }
+    
+    @GetMapping("/MateriaSP")
+    public String MateriaSP() {
+        return "MateriaSP";
+    }
+    
     @GetMapping("/AlumnoMateria")
     public String AlumnoMateria(Model model) {
         return "alumnomateria";
+    }
+    
+    @GetMapping("/AlumnoMateriaSP")
+    public String AlumnoMateriaSP() {
+        return "AlumnoMateriaSP";
     }
 }
