@@ -11,10 +11,16 @@ import com.digipro.Equipo3DP.DL.AlumnoRepository;
 import com.digipro.Equipo3DP.DL.Materia;
 import com.digipro.Equipo3DP.DL.MateriaRepository;
 import com.digipro.Equipo3DP.DL.alumnomateria;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.StoredProcedureQuery;
+import jakarta.transaction.Transactional;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.object.StoredProcedure;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -185,6 +191,14 @@ public class MainRestController {
     @PostMapping("/deleteAlumnoMateria")
     public void deleteAlumnoMateria(@RequestBody alumnomateria alumnomateria) {
         alumnoMateriaRepository.delete(alumnomateria);
+    }
+    
+    //------------------ Pruebas con SP
+    
+    @Transactional
+    @GetMapping("/getAllAlumnoSP")
+    public List<Alumno> getAllAlumnoSP() {
+        return alumnoRepository.GetAllAlumnoSP();
     }
 
 }
