@@ -4,11 +4,18 @@
  */
 package com.digipro.Equipo3DP.DL;
 
+import jakarta.persistence.NamedStoredProcedureQueries;
+import jakarta.persistence.NamedStoredProcedureQuery;
+import jakarta.persistence.ParameterMode;
+import jakarta.persistence.StoredProcedureParameter;
+//import jakarta.transaction.Transactional;
+import java.sql.ResultSet;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -33,8 +40,8 @@ public interface AlumnoRepository extends JpaRepository<Alumno, Integer> {
     @Procedure(name = "DeleteAlumnoSP")
     void deleteAlumnoSP(@Param("p_id_alumno") Long idAlumno);
 
-    @Procedure("GetAllAlumnoSP")
-    List<Alumno> getAllAlumnosSP();
+    @Procedure(name = "GetAllAlumnoSP", refCursor = true)
+    List<Alumno> GetAllAlumnoSP();
 
     @Procedure(name = "GetByIdAlumnoSP")
     List<Alumno> getByIdAlumnoSP(@Param("p_id_alumno") int idAlumno);
