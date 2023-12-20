@@ -10,6 +10,7 @@ import com.digipro.Equipo3DP.DL.AlumnoMateriaRepository;
 import com.digipro.Equipo3DP.DL.AlumnoRepository;
 import com.digipro.Equipo3DP.DL.Materia;
 import com.digipro.Equipo3DP.DL.MateriaRepository;
+import com.digipro.Equipo3DP.DL.alumnomateria;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
