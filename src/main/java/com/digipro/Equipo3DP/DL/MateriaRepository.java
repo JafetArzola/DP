@@ -31,8 +31,8 @@ public interface MateriaRepository extends JpaRepository<Materia, Integer> {
     @Procedure(name = "DeleteMateriaSP")
     void deleteMateriaSP(@Param("p_id_materia") int idMateria);
 
-    @Procedure(procedureName = "obtenerMaterias", outputParameterName = "p_cursor")
-    List<Materia> obtenerMaterias();
+    @Procedure(name = "GetAllMateriaSP", refCursor = true)
+    List<Materia> GetAllMateriaSP();
 
     @Procedure(name = "GetByIdMateriaSP", outputParameterName = "p_cursor")
     void getByIdMateriaSP(@Param("p_id_materia") int idMateria);

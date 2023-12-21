@@ -160,12 +160,12 @@ public class MainRestController {
 
     
     
-    //Logica para consumir Get All  SP 
-    @GetMapping("/obtenerMaterias")
-    public ResponseEntity<List<Materia>> obtenerMaterias() {
-        List<Materia> materias = materiaRepository.obtenerMaterias();
-        return new ResponseEntity<>(materias, HttpStatus.OK);
-    }
+//    //Logica para consumir Get All  SP 
+//    @GetMapping("/obtenerMaterias")
+//    public ResponseEntity<List<Materia>> obtenerMaterias() {
+//        List<Materia> materias = materiaRepository.obtenerMaterias();
+//        return new ResponseEntity<>(materias, HttpStatus.OK);
+//    }
     
 //-----------------------------------------------------------------
     //Servicios para alumnomateria
@@ -197,8 +197,8 @@ public class MainRestController {
     
     @Transactional
     @GetMapping("/getAllAlumnoSP")
-    public List<Alumno> getAllAlumnoSP() {
-        return alumnoRepository.GetAllAlumnoSP();
+    public List<Materia> getAllAlumnoSP() {
+        return materiaRepository.GetAllMateriaSP();
     }
 
 }
