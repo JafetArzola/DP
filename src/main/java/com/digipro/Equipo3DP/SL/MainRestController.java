@@ -197,7 +197,13 @@ public class MainRestController {
     
     @Transactional
     @GetMapping("/getAllAlumnoSP")
-    public List<Materia> getAllAlumnoSP() {
+    public List<Alumno> getAllAlumnoSP() {
+        return alumnoRepository.GetAllAlumnoSP();
+    }
+    
+    @Transactional
+    @GetMapping("/getAllMateriaSP")
+    public List<Materia> getAllMateriasSP() {
         return materiaRepository.GetAllMateriaSP();
     }
 
