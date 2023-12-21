@@ -23,7 +23,7 @@ public interface AlumnoMateriaRepository extends JpaRepository<alumnomateria, In
 
     @Procedure(name = "DeleteAlumnoMateriaSP")
     void deleteAlumnoMateriaSP(@Param("p_id_alumno_materia") int idAlumnoMateria);
-    
+        
     @Query("SELECT am FROM alumnomateria am WHERE idalumno.idalumno = :id")
     List<alumnomateria> getMateriaByIdAlumno(@Param("id") Integer id);
     
