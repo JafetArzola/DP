@@ -9,7 +9,6 @@ import com.digipro.Equipo3DP.DL.alumnomateria;
 import com.digipro.Equipo3DP.DL.AlumnoMateriaRepository;
 import com.digipro.Equipo3DP.DL.AlumnoRepository;
 import com.digipro.Equipo3DP.DL.Materia;
-import com.digipro.Equipo3DP.DL.MateriaDAOImplementation;
 import com.digipro.Equipo3DP.DL.MateriaRepository;
 import java.util.List;
 import java.util.Optional;
@@ -35,13 +34,11 @@ public class MainRestController {
     private AlumnoRepository alumnoRepository;
     private MateriaRepository materiaRepository;
     private AlumnoMateriaRepository alumnoMateriaRepository;
-    private MateriaDAOImplementation materiaDAOImplementation;
 
-    public MainRestController(AlumnoRepository alumnoRepository, MateriaRepository materiaRepository, AlumnoMateriaRepository alumnoMateriaRepository, MateriaDAOImplementation materiaDAOImplementation) {
+    public MainRestController(AlumnoRepository alumnoRepository, MateriaRepository materiaRepository, AlumnoMateriaRepository alumnoMateriaRepository) {
         this.alumnoRepository = alumnoRepository;
         this.materiaRepository = materiaRepository;
         this.alumnoMateriaRepository = alumnoMateriaRepository;
-        this.materiaDAOImplementation = materiaDAOImplementation;
     }
 
     
