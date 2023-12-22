@@ -177,8 +177,13 @@ public class MainRestController {
 
     //Servicio para añadir una materia a un alumno; donde idAlumnoMateria sea igual a '0'
     @PostMapping("/addAlumnoMateria")
-    public void addAlumnoMateria(@RequestBody alumnomateria alumnomateria) {
-        alumnoMateriaRepository.save(alumnomateria);
+    public ResponseEntity<String> addAlumnoMateria(@RequestBody alumnomateria alumnomateria) {
+        try{
+            alumnoMateriaRepository.save(alumnomateria);
+            return ResponseEntity.ok("Registro añadido");
+        } catch(Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al guardar el registro");
+        }
     }
 
     //Servicio para editar una materia registrada por un alumno; donde idAlumnoMateria sea diferente de '0'

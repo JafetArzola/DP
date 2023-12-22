@@ -117,7 +117,7 @@
                     </nav>
                     <div class="container mb-4">
                         <div class="d-grid gap-2">
-                            <a data-bs-toggle="modal" data-bs-target="#exampleModal" id="AgregaralumnomateriaModal" class="btn btn-outline-success" type="button">
+                            <a data-bs-toggle="modal" data-bs-target="#exampleModal" id="AgregaralumnomateriaModal" class="btn btn-outline-success" type="button" onclick="ddlMaterias()">
                                 <i class="bi bi-journals"></i>  Agregar alumnos-materias
                             </a>
                         </div>
@@ -131,6 +131,7 @@
                                     <th>Apellido materno</th>
                                     <th>Materia</th>
                                     <th>Costo</th>
+                                    <th>Eliminar</th>
                                 </tr>
                             </thead>
                             <tbody id="alumnomateriaTableBody">
@@ -167,7 +168,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cerrar</button>
-                                    <button type="button" class="btn btn-outline-success" id="GuardarInformacion">Guardar cambios</button>
+                                    <button type="button" class="btn btn-outline-success" id="GuardarInformacion" onclick="registrarMateriaAlumno()">Guardar cambios</button>
                                 </div>
                             </div>
                         </div>
@@ -204,6 +205,71 @@
             });
         });
     });
+
+    function ddlMaterias() {
+        $.ajax({
+            url: "http://localhost:8080/DPAPI/getAllMaterias",
+            type: "GET",
+            success: function (materias) {
+
+                $("#materia").empty();
+                $.each(materias, function (i, materia) {
+                    $("#materia").append('<option value="'
+                            + materia.idmateria + '">'
+                            + materia.nombre + '</option>');
+                });
+            },
+            error: function () {
+                alert("Error al recuperar materias");
+            }
+        });
+    }
+
+    function registrarMateriaAlumno() {
+        var urlParams = new URLSearchParams(window.location.search);
+        var idalumno = urlParams.get('idalumno');
+        var dataJson = {
+            idalumno: {idalumno: idalumno},
+            idmateria: {idmateria: $("#materia").val()}
+        };
+
+        $.ajax({
+            url: "http://localhost:8080/DPAPI/addAlumnoMateria",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(dataJson),
+            success: function () {
+                getAlumnoMateria(idalumno);
+            },
+            error: function () {
+                alert("Error al recuperar materias");
+            }
+        });
+    }
+
+    function eliminarRegistro(e) {
+
+        var urlParams = new URLSearchParams(window.location.search);
+        var idalumno = urlParams.get('idalumno');
+
+        var dataJson = {
+            idalumnomateria: e.value
+        };
+
+        $.ajax({
+            url: "http://localhost:8080/DPAPI/deleteAlumnoMateria",
+            method: "POST",
+            data: JSON.stringify(dataJson),
+            contentType: "application/json",
+            success: function () {
+                getAlumnoMateria(idalumno);
+            },
+            error: function () {
+                alert("Error al eliminar el registro.");
+            }
+        });
+    }
+
     function getAlumnoMateria(idAlumno) {
 
         $.ajax({
@@ -230,8 +296,8 @@
                 row.append('<td>' + alumnomateria.idalumno.apellidomaterno + '</td>');
                 row.append('<td>' + alumnomateria.idmateria.nombre + '</td>');
                 row.append('<td>' + alumnomateria.idmateria.costo + '</td>');
+                row.append('<td><button class="btn btn-outline-danger btnEliminar" onclick="eliminarRegistro(this)" value="' + alumnomateria.idalumnomateria + '"><i class="bi bi-trash3-fill"></i></button></td>');
 //                row.append('<td><button class="btn btn-outline-warning btnActualizar" data-id="' + alumnomateria.idalumnomateria + '"><i class="bi bi-pencil-square"></i></button></td>');
-//                row.append('<td><button class="btn btn-outline-danger btnEliminar" data-id="' + alumnomateria.idalumnomateria + '"><i class="bi bi-trash3-fill"></i></button></td>');
 
                 tableBody.append(row);
             });
@@ -297,6 +363,7 @@
 //                    }
 //                });
 //            }
+
         }
     }
 </script>
