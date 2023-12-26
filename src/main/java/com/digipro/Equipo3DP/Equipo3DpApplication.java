@@ -10,6 +10,5 @@ public class Equipo3DpApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Equipo3DpApplication.class, args);
-	}
-        
+	}    
 }

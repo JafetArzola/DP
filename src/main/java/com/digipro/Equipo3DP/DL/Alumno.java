@@ -9,12 +9,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedStoredProcedureQuery;
+import jakarta.persistence.ParameterMode;
+import jakarta.persistence.StoredProcedureParameter;
 import java.io.Serializable;
 
 /**
  *
  * @author digis
  */
+@NamedStoredProcedureQuery(name = "pruebaGetAll", procedureName = "pruebaGetAll", resultClasses = Alumno.class,
+                               parameters = @StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, type = void.class, name = "result_cursor"))
 @Entity
 public class Alumno implements Serializable {
     
@@ -54,6 +59,10 @@ public class Alumno implements Serializable {
     public Alumno(String nombre, String apellidopaterno){
         this.nombre = nombre;
         this.apellidopaterno = apellidopaterno;
+    }
+    
+    public Alumno(int idalumno){
+        this.idalumno = idalumno;
     }
     
     public int getIdalumno() {

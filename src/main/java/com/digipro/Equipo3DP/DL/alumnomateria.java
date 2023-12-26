@@ -18,7 +18,7 @@ import java.io.Serializable;
  * @author digis
  */
 @Entity
-public class AlumnoMateria implements Serializable{
+public class alumnomateria implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +34,7 @@ public class AlumnoMateria implements Serializable{
     
     
     
-     public AlumnoMateria(){
+     public alumnomateria(){
         
     }
 
